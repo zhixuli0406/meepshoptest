@@ -9,15 +9,13 @@ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:meepshoptest/features/chat/domain/entities/conversation_entity.dart';
-import 'package:meepshoptest/features/message/domain/entities/message_entity.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_entity.dart';
 import 'package:meepshoptest/features/chat/domain/entities/reaction_type.dart';
 import 'package:meepshoptest/features/chat/domain/entities/reactions_entity.dart';
 import 'package:meepshoptest/features/chat/presentation/blocs/chat_message/chat_message_bloc.dart';
 import 'package:meepshoptest/injectable.dart';
-import 'package:meepshoptest/features/chat/domain/usecases/get_messages_usecase.dart';
-import 'package:meepshoptest/features/chat/domain/usecases/create_message_usecase.dart';
-import 'package:meepshoptest/core/shared/notifiers/conversation_update_notifier.dart';
 import 'package:meepshoptest/core/router/router.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_type.dart';
 
 @RoutePage()
 class ChatMessagePage extends StatefulWidget {
@@ -46,6 +44,27 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
   @override
   void initState() {
     super.initState();
+
+    print('[ChatMessagePage] initState called.');
+    print('[ChatMessagePage] Received Conversation Details:');
+    print('[ChatMessagePage]   ID: ${widget.conversation.id}');
+    print('[ChatMessagePage]   Name: "${widget.conversation.name}"');
+    print(
+      '[ChatMessagePage]   LastMessage: "${widget.conversation.lastMessage}"',
+    );
+    print('[ChatMessagePage]   Timestamp: ${widget.conversation.timestamp}');
+    print(
+      '[ChatMessagePage]   Participants (${widget.conversation.participants.length}):',
+    );
+    for (var p in widget.conversation.participants) {
+      print(
+        '[ChatMessagePage]     - UserID: ${p.userId}, Name: "${p.user}", Avatar: "${p.avatar}"',
+      );
+    }
+    print('[ChatMessagePage] Received currentUserId: ${widget.currentUserId}');
+    print(
+      '[ChatMessagePage] Received conversationTitle: "${widget.conversationTitle}"',
+    );
   }
 
   @override
@@ -252,14 +271,22 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create:
-          (context) =>
-              getIt<ChatMessageBloc>()..add(
-                ChatMessageEvent.initializeChat(
-                  conversation: widget.conversation,
-                  currentUserId: widget.currentUserId,
-                ),
-              ),
+      create: (context) {
+        final bloc = getIt<ChatMessageBloc>();
+        bloc.add(
+          ChatMessageEvent.initializeChat(
+            conversation: widget.conversation,
+            currentUserId: widget.currentUserId,
+          ),
+        );
+        print(
+          '[ChatMessagePage] BlocProvider created. Dispatched InitializeChat event.',
+        );
+        print(
+          '[ChatMessagePage] ChatMessageBloc state (after create and event add): ${bloc.state}',
+        );
+        return bloc;
+      },
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -289,51 +316,103 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
                       );
                     }
                   },
+                  buildWhen: (previous, current) {
+                    if (previous.runtimeType != current.runtimeType) {
+                      return true;
+                    }
+
+                    Object? prevVersion;
+                    Object? currVersion;
+                    List<MessageEntity>? prevMessages;
+                    List<MessageEntity>? currMessages;
+
+                    if (previous is Loaded) {
+                      prevVersion = previous.version;
+                      prevMessages = previous.messages;
+                    } else if (previous is MessageSending) {
+                      prevVersion = previous.version;
+                      prevMessages = previous.messages;
+                    } else if (previous is MessageSent) {
+                      prevVersion = previous.version;
+                      prevMessages = previous.messages;
+                    } else if (previous is MessageReactionUpdating) {
+                      prevVersion = previous.version;
+                      prevMessages = previous.messages;
+                    } else if (previous is MessageReactionUpdated) {
+                      prevVersion = previous.version;
+                      prevMessages = previous.messages;
+                    }
+
+                    if (current is Loaded) {
+                      currVersion = current.version;
+                      currMessages = current.messages;
+                    } else if (current is MessageSending) {
+                      currVersion = current.version;
+                      currMessages = current.messages;
+                    } else if (current is MessageSent) {
+                      currVersion = current.version;
+                      currMessages = current.messages;
+                    } else if (current is MessageReactionUpdating) {
+                      currVersion = current.version;
+                      currMessages = current.messages;
+                    } else if (current is MessageReactionUpdated) {
+                      currVersion = current.version;
+                      currMessages = current.messages;
+                    }
+
+                    if (prevVersion != null && currVersion != null) {
+                      if (prevVersion != currVersion) {
+                        return true;
+                      }
+                      return false;
+                    }
+
+                    return true;
+                  },
                   builder: (consumerBuilderContext, state) {
-                    final messages = switch (state) {
-                      Initial() || Loading() => <MessageEntity>[],
-                      Loaded(:final messages) => messages,
-                      MessageSending(:final messages) => messages,
-                      MessageSent(:final messages) => messages,
-                      MessageReactionUpdating(:final messages) => messages,
-                      MessageReactionUpdated(:final messages) => messages,
-                      Error() => _extractMessagesFromState(state),
+                    return switch (state) {
+                      Initial() || Loading() => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      Error(:final failure) => () {
+                        // Attempt to get messages that might have been loaded before the error
+                        final previousMessages = _extractMessagesFromState(
+                          state,
+                        );
+                        if (previousMessages.isEmpty) {
+                          return Center(
+                            child: Text('Error: ${failure.message}'),
+                          );
+                        }
+                        // If there was an error but we have some messages, show them
+                        return _buildMessagesListView(
+                          consumerBuilderContext,
+                          previousMessages,
+                          const {}, // Default or extract sessionReactions if relevant
+                        );
+                      }(),
+                      Loaded(:final messages, :final userSessionReactions) ||
+                      MessageSending(
+                        :final messages,
+                        :final userSessionReactions,
+                      ) ||
+                      MessageSent(
+                        :final messages,
+                        :final userSessionReactions,
+                      ) ||
+                      MessageReactionUpdating(
+                        :final messages,
+                        :final userSessionReactions,
+                      ) ||
+                      MessageReactionUpdated(
+                        :final messages,
+                        :final userSessionReactions,
+                      ) => _buildMessagesListView(
+                        consumerBuilderContext,
+                        messages,
+                        userSessionReactions,
+                      ),
                     };
-
-                    final Map<String, Set<ReactionType>> sessionReactions =
-                        switch (state) {
-                          Initial() => <String, Set<ReactionType>>{},
-                          Loading() => <String, Set<ReactionType>>{},
-                          Error() => <String, Set<ReactionType>>{},
-                          Loaded(userSessionReactions: final usr) =>
-                            usr as Map<String, Set<ReactionType>>,
-                          MessageSending(userSessionReactions: final usr) =>
-                            usr as Map<String, Set<ReactionType>>,
-                          MessageSent(userSessionReactions: final usr) =>
-                            usr as Map<String, Set<ReactionType>>,
-                          MessageReactionUpdating(
-                            userSessionReactions: final usr,
-                          ) =>
-                            usr as Map<String, Set<ReactionType>>,
-                          MessageReactionUpdated(
-                            userSessionReactions: final usr,
-                          ) =>
-                            usr as Map<String, Set<ReactionType>>,
-                        };
-
-                    if (state is Loading && messages.isEmpty) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (state is Error && messages.isEmpty) {
-                      return Center(
-                        child: Text('Error: ${state.failure.message}'),
-                      );
-                    }
-                    return _buildMessagesListView(
-                      consumerBuilderContext,
-                      messages,
-                      sessionReactions,
-                    );
                   },
                 ),
               ),
@@ -350,12 +429,14 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
   }
 
   List<MessageEntity> _extractMessagesFromState(ChatMessageState state) {
-    if (state is Loaded) return state.messages;
-    if (state is MessageSending) return state.messages;
-    if (state is MessageSent) return state.messages;
-    if (state is MessageReactionUpdating) return state.messages;
-    if (state is MessageReactionUpdated) return state.messages;
-    return [];
+    return switch (state) {
+      Loaded(:final messages) => messages,
+      MessageSending(:final messages) => messages,
+      MessageSent(:final messages) => messages,
+      MessageReactionUpdating(:final messages) => messages,
+      MessageReactionUpdated(:final messages) => messages,
+      _ => [],
+    };
   }
 
   Widget _buildMessageBubble(
@@ -561,7 +642,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
           Row(
             mainAxisAlignment:
                 isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (!isCurrentUser) ...[avatarWidget, Gap(8.w)],
               Flexible(child: contentColumn),
@@ -691,66 +772,60 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.add_photo_alternate_outlined),
-            onPressed: () {
-              _pickImage(
-                ImageSource.gallery,
-                pageContext.read<ChatMessageBloc>(),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.camera_alt, color: theme.colorScheme.primary),
-            tooltip: 'Take Photo',
-            onPressed: () {
-              _pickImage(
-                ImageSource.camera,
-                pageContext.read<ChatMessageBloc>(),
-              );
-            },
-          ),
-          Expanded(
-            child: TextField(
-              controller: _messageController,
-              focusNode: _messageFocusNode,
-              decoration: InputDecoration(
-                hintText: 'Type a message...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide.none,
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.camera_alt, color: theme.colorScheme.primary),
+              tooltip: 'Take Photo',
+              onPressed: () {
+                _pickImage(
+                  ImageSource.camera,
+                  pageContext.read<ChatMessageBloc>(),
+                );
+              },
+            ),
+            Expanded(
+              child: TextField(
+                controller: _messageController,
+                focusNode: _messageFocusNode,
+                decoration: InputDecoration(
+                  hintText: 'Type a message...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Theme.of(
+                    pageContext,
+                  ).colorScheme.surfaceVariant.withOpacity(0.5),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 10.0,
+                  ),
                 ),
-                filled: true,
-                fillColor: Theme.of(
-                  pageContext,
-                ).colorScheme.surfaceVariant.withOpacity(0.5),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 10.0,
-                ),
+                onSubmitted: (_) => _sendMessage(pageContext),
+                textInputAction: TextInputAction.send,
               ),
-              onSubmitted: (_) => _sendMessage(pageContext),
-              textInputAction: TextInputAction.send,
             ),
-          ),
-          Gap(ScreenUtil().setWidth(8)),
-          IconButton(
-            icon: Icon(
-              Icons.send,
-              color:
+            Gap(ScreenUtil().setWidth(8)),
+            IconButton(
+              icon: Icon(
+                Icons.send,
+                color:
+                    _messageController.text.isNotEmpty
+                        ? theme.colorScheme.primary
+                        : theme.disabledColor,
+              ),
+              tooltip: 'Send Message',
+              onPressed:
                   _messageController.text.isNotEmpty
-                      ? theme.colorScheme.primary
-                      : theme.disabledColor,
+                      ? () => _sendMessage(pageContext)
+                      : null,
             ),
-            tooltip: 'Send Message',
-            onPressed:
-                _messageController.text.isNotEmpty
-                    ? () => _sendMessage(pageContext)
-                    : null,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 // import 'package:meepshoptest/features/auth/domain/entities/user_entity.dart'; // Old import for participants
 import 'package:meepshoptest/features/conversation/domain/entities/conversation_participant_entity.dart'; // New import for participants
-import 'package:meepshoptest/features/message/domain/entities/message_entity.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_entity.dart';
 import 'package:meepshoptest/features/auth/domain/entities/user_entity.dart'; // Keep for createdBy field
 
 class ConversationEntity extends Equatable {

@@ -23,6 +23,7 @@ import 'features/auth/data/services/auth_service.dart' as _i871;
 import 'features/auth/data/services/token_local_service_impl.dart' as _i768;
 import 'features/auth/domain/repositories/auth_repository.dart' as _i1015;
 import 'features/auth/domain/usecases/get_logged_in_user_usecase.dart' as _i467;
+import 'features/auth/domain/usecases/get_users_usecase.dart' as _i855;
 import 'features/auth/domain/usecases/login_user_usecase.dart' as _i323;
 import 'features/auth/domain/usecases/logout_user_usecase.dart' as _i84;
 import 'features/auth/domain/usecases/observe_user_usecase.dart' as _i179;
@@ -32,16 +33,26 @@ import 'features/auth/domain/usecases/update_user_profile_usecase.dart'
 import 'features/auth/presentation/blocs/auth_bloc.dart' as _i302;
 import 'features/auth/presentation/blocs/register/register_bloc.dart' as _i1049;
 import 'features/chat/data/repositories/chat_repository_impl.dart' as _i382;
+import 'features/chat/data/repositories/message_repository_impl.dart' as _i847;
 import 'features/chat/data/services/chat_data_source_service.dart' as _i526;
-import 'features/chat/data/services/chat_remote_data_source.dart' as _i828;
+import 'features/chat/data/services/chat_data_source_service_impl.dart'
+    as _i323;
+import 'features/chat/data/services/message_api_service.dart' as _i184;
 import 'features/chat/domain/repositories/chat_repository.dart' as _i453;
+import 'features/chat/domain/repositories/message_repository.dart' as _i309;
+import 'features/chat/domain/usecases/create_conversation_usecase.dart'
+    as _i707;
 import 'features/chat/domain/usecases/create_message_usecase.dart' as _i722;
 import 'features/chat/domain/usecases/get_conversations_usecase.dart' as _i949;
 import 'features/chat/domain/usecases/get_messages_usecase.dart' as _i350;
+import 'features/chat/domain/usecases/update_message_reaction_usecase.dart'
+    as _i349;
 import 'features/chat/presentation/blocs/chat_message/chat_message_bloc.dart'
     as _i674;
 import 'features/chat/presentation/blocs/conversation_list/conversation_list_bloc.dart'
     as _i330;
+import 'features/chat/presentation/blocs/create_conversation/create_conversation_bloc.dart'
+    as _i604;
 import 'features/conversation/data/repositories/conversation_repository_impl.dart'
     as _i970;
 import 'features/conversation/data/services/conversation_api_service.dart'
@@ -55,12 +66,6 @@ import 'features/conversation/domain/usecases/get_conversations_usecase.dart'
     as _i786;
 import 'features/conversation/presentation/blocs/conversation_list_bloc.dart'
     as _i15;
-import 'features/message/data/repositories/message_repository_impl.dart'
-    as _i400;
-import 'features/message/data/services/message_api_service.dart' as _i11;
-import 'features/message/domain/repositories/message_repository.dart' as _i37;
-import 'features/message/domain/usecases/create_message_usecase.dart' as _i75;
-import 'features/message/domain/usecases/get_messages_usecase.dart' as _i985;
 import 'features/upload/data/repositories/upload_repository_impl.dart' as _i416;
 import 'features/upload/data/services/upload_api_service.dart' as _i502;
 import 'features/upload/data/services/upload_service.dart' as _i418;
@@ -68,6 +73,8 @@ import 'features/upload/domain/repositories/upload_repository.dart' as _i205;
 import 'features/upload/domain/usecases/get_presigned_url_usecase.dart'
     as _i191;
 import 'features/upload/domain/usecases/upload_file_usecase.dart' as _i290;
+import 'features/user_selection/presentation/blocs/user_list_bloc.dart'
+    as _i995;
 import 'injectable.dart' as _i1027;
 
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -93,8 +100,6 @@ Future<_i174.GetIt> init(
   gh.lazySingleton<_i564.ChatWebSocketService>(
       () => networkModule.chatWebSocketService);
   gh.lazySingleton<_i361.Dio>(() => networkModule.dio);
-  gh.lazySingleton<_i11.MessageApiService>(
-      () => _i11.MessageApiServiceImpl(gh<_i871.ApiClient>()));
   gh.lazySingleton<_i502.UploadApiService>(
       () => _i502.UploadApiServiceImpl(gh<_i871.ApiClient>()));
   gh.factory<_i577.ThemeCubit>(
@@ -103,13 +108,13 @@ Future<_i174.GetIt> init(
       () => _i768.TokenLocalServiceImpl(gh<_i460.SharedPreferences>()));
   gh.lazySingleton<_i113.AuthLocalService>(
       () => _i113.AuthLocalServiceImpl(gh<_i460.SharedPreferences>()));
-  gh.lazySingleton<_i37.MessageRepository>(
-      () => _i400.MessageRepositoryImpl(gh<_i11.MessageApiService>()));
-  gh.lazySingleton<_i526.ChatDataSourceService>(
-      () => _i828.ChatRemoteDataSourceImpl(gh<_i871.ApiClient>()));
+  gh.lazySingleton<_i184.MessageApiService>(
+      () => _i184.MessageApiServiceImpl(gh<_i871.ApiClient>()));
   gh.lazySingleton<_i871.AuthService>(() => _i871.AuthService(gh<_i361.Dio>()));
   gh.lazySingleton<_i308.ConversationApiService>(
       () => _i308.ConversationApiServiceImpl(gh<_i871.ApiClient>()));
+  gh.lazySingleton<_i526.ChatDataSourceService>(
+      () => _i323.ChatDataSourceServiceImpl(gh<_i871.ApiClient>()));
   gh.lazySingleton<_i418.UploadService>(
       () => _i418.UploadService(gh<_i871.ApiClient>()));
   gh.lazySingleton<_i745.ConversationService>(
@@ -128,12 +133,6 @@ Future<_i174.GetIt> init(
       () => _i84.LogoutUserUseCase(gh<_i1015.AuthRepository>()));
   gh.lazySingleton<_i179.ObserveUserUseCase>(
       () => _i179.ObserveUserUseCase(gh<_i1015.AuthRepository>()));
-  gh.lazySingleton<_i75.CreateMessageUseCase>(() =>
-      _i75.CreateMessageUseCase(repository: gh<_i37.MessageRepository>()));
-  gh.lazySingleton<_i985.GetMessagesUseCase>(
-      () => _i985.GetMessagesUseCase(repository: gh<_i37.MessageRepository>()));
-  gh.lazySingleton<_i453.ChatRepository>(
-      () => _i382.ChatRepositoryImpl(gh<_i526.ChatDataSourceService>()));
   gh.lazySingleton<_i792.ConversationRepository>(
       () => _i970.ConversationRepositoryImpl(gh<_i745.ConversationService>()));
   gh.lazySingleton<_i205.UploadRepository>(
@@ -142,25 +141,37 @@ Future<_i174.GetIt> init(
       () => _i191.GetPresignedUrlUseCase(gh<_i205.UploadRepository>()));
   gh.lazySingleton<_i290.UploadFileUseCase>(
       () => _i290.UploadFileUseCase(gh<_i205.UploadRepository>()));
+  gh.lazySingleton<_i309.MessageRepository>(() => _i847.MessageRepositoryImpl(
+      dataSourceService: gh<_i526.ChatDataSourceService>()));
+  gh.lazySingleton<_i722.CreateMessageUseCase>(() =>
+      _i722.CreateMessageUseCase(repository: gh<_i309.MessageRepository>()));
+  gh.lazySingleton<_i350.GetMessagesUseCase>(() =>
+      _i350.GetMessagesUseCase(repository: gh<_i309.MessageRepository>()));
+  gh.lazySingleton<_i349.UpdateMessageReactionUseCase>(() =>
+      _i349.UpdateMessageReactionUseCase(
+          repository: gh<_i309.MessageRepository>()));
   gh.lazySingleton<_i133.CreateConversationUseCase>(() =>
       _i133.CreateConversationUseCase(
           repository: gh<_i792.ConversationRepository>()));
+  gh.lazySingleton<_i453.ChatRepository>(() => _i382.ChatRepositoryImpl(
+      dataSourceService: gh<_i526.ChatDataSourceService>()));
   gh.lazySingleton<_i786.GetConversationsUseCase>(
       () => _i786.GetConversationsUseCase(gh<_i792.ConversationRepository>()));
   gh.lazySingleton<_i883.UpdateUserProfileUseCase>(
       () => _i883.UpdateUserProfileUseCase(gh<_i1015.AuthRepository>()));
-  gh.lazySingleton<_i949.GetConversationsUsecase>(
-      () => _i949.GetConversationsUsecase(gh<_i453.ChatRepository>()));
-  gh.lazySingleton<_i722.CreateMessageUsecase>(
-      () => _i722.CreateMessageUsecase(gh<_i453.ChatRepository>()));
-  gh.lazySingleton<_i350.GetMessagesUsecase>(
-      () => _i350.GetMessagesUsecase(gh<_i453.ChatRepository>()));
+  gh.lazySingleton<_i855.GetUsersUseCase>(
+      () => _i855.GetUsersUseCase(gh<_i1015.AuthRepository>()));
   gh.factory<_i674.ChatMessageBloc>(() => _i674.ChatMessageBloc(
-        gh<_i350.GetMessagesUsecase>(),
-        gh<_i722.CreateMessageUsecase>(),
+        gh<_i350.GetMessagesUseCase>(),
+        gh<_i722.CreateMessageUseCase>(),
+        gh<_i349.UpdateMessageReactionUseCase>(),
         gh<_i508.ConversationUpdateNotifier>(),
         gh<_i564.ChatWebSocketService>(),
       ));
+  gh.lazySingleton<_i949.GetConversationsUsecase>(
+      () => _i949.GetConversationsUsecase(gh<_i453.ChatRepository>()));
+  gh.factory<_i995.UserListBloc>(
+      () => _i995.UserListBloc(gh<_i855.GetUsersUseCase>()));
   gh.factory<_i302.AuthBloc>(() => _i302.AuthBloc(
         getLoggedInUserUseCase: gh<_i467.GetLoggedInUserUseCase>(),
         loginUserUseCase: gh<_i323.LoginUserUseCase>(),
@@ -177,12 +188,16 @@ Future<_i174.GetIt> init(
         gh<_i290.UploadFileUseCase>(),
         gh<_i302.AuthBloc>(),
       ));
-  gh.factory<_i330.ConversationListBloc>(() => _i330.ConversationListBloc(
+  gh.lazySingleton<_i330.ConversationListBloc>(() => _i330.ConversationListBloc(
         gh<_i949.GetConversationsUsecase>(),
         gh<_i508.ConversationUpdateNotifier>(),
       ));
+  gh.lazySingleton<_i707.CreateConversationUseCase>(
+      () => _i707.CreateConversationUseCase(gh<_i453.ChatRepository>()));
   gh.factory<_i15.ConversationListBloc>(
       () => _i15.ConversationListBloc(gh<_i786.GetConversationsUseCase>()));
+  gh.factory<_i604.CreateConversationBloc>(() => _i604.CreateConversationBloc(
+      createConversationUseCase: gh<_i707.CreateConversationUseCase>()));
   return getIt;
 }
 

@@ -21,34 +21,55 @@ String? _dateTimeToNullableIso8601String(DateTime? dateTime) {
 
 @freezed
 class ConversationModel with _$ConversationModel {
+  const ConversationModel._(); // Private constructor for implementing methods
+
   const factory ConversationModel({
     @JsonKey(name: '_id') required String id,
+    @JsonKey(name: 'title') String? name,
     required List<ParticipantModel> participants,
-    @JsonKey(name: 'lastMessageText')
-    String? lastMessage, // Maps to 'lastMessageText' and is nullable
-    @JsonKey(
-      name: 'lastMessageTimestamp',
-      fromJson: _dateTimeFromNullableTimestamp,
-      toJson: _dateTimeToNullableIso8601String,
-    )
-    DateTime?
-    timestamp, // Maps to 'lastMessageTimestamp', is nullable, and uses custom converters
-    @JsonKey(
-      fromJson: _dateTimeFromNullableTimestamp,
-      toJson: _dateTimeToNullableIso8601String,
-    )
-    DateTime? createdAt, // Added createdAt, nullable
-    @JsonKey(
-      fromJson: _dateTimeFromNullableTimestamp,
-      toJson: _dateTimeToNullableIso8601String,
-    )
-    DateTime? updatedAt, // Added updatedAt, nullable
-    int? legacyConvId, // Added legacyConvId, nullable
-    // If __v is needed, add it as: int? v,
+    @JsonKey(name: 'createdAt') required DateTime createdAt,
+    @JsonKey(name: 'updatedAt') DateTime? updatedAt,
+    @JsonKey(name: 'lastMessageText') String? lastMessage,
+    @JsonKey(name: 'lastMessageTimestamp') DateTime? timestamp,
   }) = _ConversationModel;
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) =>
       _$ConversationModelFromJson(json);
+
+  // Factory constructor to create a ConversationModel from a ConversationEntity
+  factory ConversationModel.fromEntity(ConversationEntity entity) {
+    return ConversationModel(
+      id: entity.id,
+      name: entity.name,
+      participants:
+          entity.participants
+              .map(
+                (pEntity) => ParticipantModel(
+                  userId: pEntity.userId,
+                  user: pEntity.user,
+                  avatar: pEntity.avatar,
+                ),
+              )
+              .toList(),
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+      lastMessage: entity.lastMessage,
+      timestamp: entity.timestamp,
+    );
+  }
+
+  // Method to convert ConversationModel to ConversationEntity
+  ConversationEntity toEntity() {
+    return ConversationEntity(
+      id: id,
+      name: name ?? 'Unknown Conversation',
+      participants: participants.map((pModel) => pModel.toEntity()).toList(),
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      lastMessage: lastMessage,
+      timestamp: timestamp,
+    );
+  }
 }
 
 // Keep the toEntity extension, but ensure it handles nullable fields appropriately
@@ -59,13 +80,12 @@ extension ConversationModelX on ConversationModel {
     // For example, if ConversationEntity.lastMessage is non-nullable, provide a default value:
     return ConversationEntity(
       id: id,
-      participants: participants.map((p) => p.toEntity()).toList(),
-      lastMessage: lastMessage ?? '', // Provide default if null
-      timestamp: timestamp ?? DateTime.now(), // Provide default if null
-      // Map other new fields if they exist in ConversationEntity
-      // legacyConvId: legacyConvId,
-      // createdAt: createdAt,
-      // updatedAt: updatedAt,
+      name: name ?? 'Unknown Conversation',
+      participants: participants.map((pModel) => pModel.toEntity()).toList(),
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      lastMessage: lastMessage,
+      timestamp: timestamp,
     );
   }
 }

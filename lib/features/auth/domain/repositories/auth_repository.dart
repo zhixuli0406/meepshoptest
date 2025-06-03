@@ -67,6 +67,8 @@ abstract class AuthRepository {
 
   Stream<UserEntity?> get user;
 
+  Future<Either<Failure, List<UserEntity>>> getUsers();
+
   Future<Either<Failure, UserEntity>> updateUserProfile({
     String? username,
     String? avatarUrl,

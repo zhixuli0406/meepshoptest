@@ -16,16 +16,18 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$MessageEntity {
-  String? get id => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
   String get conversationId => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
-  String get user => throw _privateConstructorUsedError;
-  String get avatar => throw _privateConstructorUsedError;
-  String get messageType => throw _privateConstructorUsedError;
-  String get message => throw _privateConstructorUsedError;
-  List<ReactionDetailEntity> get reactions =>
-      throw _privateConstructorUsedError;
+  MessageSenderEntity get sender => throw _privateConstructorUsedError;
+  MessageType get type => throw _privateConstructorUsedError;
+  String get content => throw _privateConstructorUsedError;
+  String? get imageUrl =>
+      throw _privateConstructorUsedError; // In Domain, we prefer direct image URL if type is image
+  String? get s3Key =>
+      throw _privateConstructorUsedError; // Keep s3Key if needed for other operations, e.g., delete
   DateTime get timestamp => throw _privateConstructorUsedError;
+  List<ReactionDetailEntity>? get reactions =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of MessageEntity
   /// with the given fields replaced by the non-null parameter values.
@@ -41,15 +43,17 @@ abstract class $MessageEntityCopyWith<$Res> {
       _$MessageEntityCopyWithImpl<$Res, MessageEntity>;
   @useResult
   $Res call(
-      {String? id,
+      {String id,
       String conversationId,
-      String userId,
-      String user,
-      String avatar,
-      String messageType,
-      String message,
-      List<ReactionDetailEntity> reactions,
-      DateTime timestamp});
+      MessageSenderEntity sender,
+      MessageType type,
+      String content,
+      String? imageUrl,
+      String? s3Key,
+      DateTime timestamp,
+      List<ReactionDetailEntity>? reactions});
+
+  $MessageSenderEntityCopyWith<$Res> get sender;
 }
 
 /// @nodoc
@@ -67,54 +71,64 @@ class _$MessageEntityCopyWithImpl<$Res, $Val extends MessageEntity>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? id = null,
     Object? conversationId = null,
-    Object? userId = null,
-    Object? user = null,
-    Object? avatar = null,
-    Object? messageType = null,
-    Object? message = null,
-    Object? reactions = null,
+    Object? sender = null,
+    Object? type = null,
+    Object? content = null,
+    Object? imageUrl = freezed,
+    Object? s3Key = freezed,
     Object? timestamp = null,
+    Object? reactions = freezed,
   }) {
     return _then(_value.copyWith(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       conversationId: null == conversationId
           ? _value.conversationId
           : conversationId // ignore: cast_nullable_to_non_nullable
               as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
+      sender: null == sender
+          ? _value.sender
+          : sender // ignore: cast_nullable_to_non_nullable
+              as MessageSenderEntity,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as MessageType,
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
               as String,
-      user: null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as String,
-      avatar: null == avatar
-          ? _value.avatar
-          : avatar // ignore: cast_nullable_to_non_nullable
-              as String,
-      messageType: null == messageType
-          ? _value.messageType
-          : messageType // ignore: cast_nullable_to_non_nullable
-              as String,
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      reactions: null == reactions
-          ? _value.reactions
-          : reactions // ignore: cast_nullable_to_non_nullable
-              as List<ReactionDetailEntity>,
+      imageUrl: freezed == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      s3Key: freezed == s3Key
+          ? _value.s3Key
+          : s3Key // ignore: cast_nullable_to_non_nullable
+              as String?,
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      reactions: freezed == reactions
+          ? _value.reactions
+          : reactions // ignore: cast_nullable_to_non_nullable
+              as List<ReactionDetailEntity>?,
     ) as $Val);
+  }
+
+  /// Create a copy of MessageEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $MessageSenderEntityCopyWith<$Res> get sender {
+    return $MessageSenderEntityCopyWith<$Res>(_value.sender, (value) {
+      return _then(_value.copyWith(sender: value) as $Val);
+    });
   }
 }
 
@@ -127,15 +141,18 @@ abstract class _$$MessageEntityImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? id,
+      {String id,
       String conversationId,
-      String userId,
-      String user,
-      String avatar,
-      String messageType,
-      String message,
-      List<ReactionDetailEntity> reactions,
-      DateTime timestamp});
+      MessageSenderEntity sender,
+      MessageType type,
+      String content,
+      String? imageUrl,
+      String? s3Key,
+      DateTime timestamp,
+      List<ReactionDetailEntity>? reactions});
+
+  @override
+  $MessageSenderEntityCopyWith<$Res> get sender;
 }
 
 /// @nodoc
@@ -151,53 +168,53 @@ class __$$MessageEntityImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? id = null,
     Object? conversationId = null,
-    Object? userId = null,
-    Object? user = null,
-    Object? avatar = null,
-    Object? messageType = null,
-    Object? message = null,
-    Object? reactions = null,
+    Object? sender = null,
+    Object? type = null,
+    Object? content = null,
+    Object? imageUrl = freezed,
+    Object? s3Key = freezed,
     Object? timestamp = null,
+    Object? reactions = freezed,
   }) {
     return _then(_$MessageEntityImpl(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       conversationId: null == conversationId
           ? _value.conversationId
           : conversationId // ignore: cast_nullable_to_non_nullable
               as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
+      sender: null == sender
+          ? _value.sender
+          : sender // ignore: cast_nullable_to_non_nullable
+              as MessageSenderEntity,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as MessageType,
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
               as String,
-      user: null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as String,
-      avatar: null == avatar
-          ? _value.avatar
-          : avatar // ignore: cast_nullable_to_non_nullable
-              as String,
-      messageType: null == messageType
-          ? _value.messageType
-          : messageType // ignore: cast_nullable_to_non_nullable
-              as String,
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      reactions: null == reactions
-          ? _value._reactions
-          : reactions // ignore: cast_nullable_to_non_nullable
-              as List<ReactionDetailEntity>,
+      imageUrl: freezed == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      s3Key: freezed == s3Key
+          ? _value.s3Key
+          : s3Key // ignore: cast_nullable_to_non_nullable
+              as String?,
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      reactions: freezed == reactions
+          ? _value._reactions
+          : reactions // ignore: cast_nullable_to_non_nullable
+              as List<ReactionDetailEntity>?,
     ));
   }
 }
@@ -206,45 +223,48 @@ class __$$MessageEntityImplCopyWithImpl<$Res>
 
 class _$MessageEntityImpl implements _MessageEntity {
   const _$MessageEntityImpl(
-      {this.id,
+      {required this.id,
       required this.conversationId,
-      required this.userId,
-      required this.user,
-      required this.avatar,
-      required this.messageType,
-      required this.message,
-      required final List<ReactionDetailEntity> reactions,
-      required this.timestamp})
+      required this.sender,
+      required this.type,
+      required this.content,
+      this.imageUrl,
+      this.s3Key,
+      required this.timestamp,
+      final List<ReactionDetailEntity>? reactions})
       : _reactions = reactions;
 
   @override
-  final String? id;
+  final String id;
   @override
   final String conversationId;
   @override
-  final String userId;
+  final MessageSenderEntity sender;
   @override
-  final String user;
+  final MessageType type;
   @override
-  final String avatar;
+  final String content;
   @override
-  final String messageType;
+  final String? imageUrl;
+// In Domain, we prefer direct image URL if type is image
   @override
-  final String message;
-  final List<ReactionDetailEntity> _reactions;
+  final String? s3Key;
+// Keep s3Key if needed for other operations, e.g., delete
   @override
-  List<ReactionDetailEntity> get reactions {
+  final DateTime timestamp;
+  final List<ReactionDetailEntity>? _reactions;
+  @override
+  List<ReactionDetailEntity>? get reactions {
+    final value = _reactions;
+    if (value == null) return null;
     if (_reactions is EqualUnmodifiableListView) return _reactions;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_reactions);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
-  final DateTime timestamp;
-
-  @override
   String toString() {
-    return 'MessageEntity(id: $id, conversationId: $conversationId, userId: $userId, user: $user, avatar: $avatar, messageType: $messageType, message: $message, reactions: $reactions, timestamp: $timestamp)';
+    return 'MessageEntity(id: $id, conversationId: $conversationId, sender: $sender, type: $type, content: $content, imageUrl: $imageUrl, s3Key: $s3Key, timestamp: $timestamp, reactions: $reactions)';
   }
 
   @override
@@ -255,16 +275,16 @@ class _$MessageEntityImpl implements _MessageEntity {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.conversationId, conversationId) ||
                 other.conversationId == conversationId) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.user, user) || other.user == user) &&
-            (identical(other.avatar, avatar) || other.avatar == avatar) &&
-            (identical(other.messageType, messageType) ||
-                other.messageType == messageType) &&
-            (identical(other.message, message) || other.message == message) &&
-            const DeepCollectionEquality()
-                .equals(other._reactions, _reactions) &&
+            (identical(other.sender, sender) || other.sender == sender) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.content, content) || other.content == content) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
+            (identical(other.s3Key, s3Key) || other.s3Key == s3Key) &&
             (identical(other.timestamp, timestamp) ||
-                other.timestamp == timestamp));
+                other.timestamp == timestamp) &&
+            const DeepCollectionEquality()
+                .equals(other._reactions, _reactions));
   }
 
   @override
@@ -272,13 +292,13 @@ class _$MessageEntityImpl implements _MessageEntity {
       runtimeType,
       id,
       conversationId,
-      userId,
-      user,
-      avatar,
-      messageType,
-      message,
-      const DeepCollectionEquality().hash(_reactions),
-      timestamp);
+      sender,
+      type,
+      content,
+      imageUrl,
+      s3Key,
+      timestamp,
+      const DeepCollectionEquality().hash(_reactions));
 
   /// Create a copy of MessageEntity
   /// with the given fields replaced by the non-null parameter values.
@@ -291,34 +311,35 @@ class _$MessageEntityImpl implements _MessageEntity {
 
 abstract class _MessageEntity implements MessageEntity {
   const factory _MessageEntity(
-      {final String? id,
+      {required final String id,
       required final String conversationId,
-      required final String userId,
-      required final String user,
-      required final String avatar,
-      required final String messageType,
-      required final String message,
-      required final List<ReactionDetailEntity> reactions,
-      required final DateTime timestamp}) = _$MessageEntityImpl;
+      required final MessageSenderEntity sender,
+      required final MessageType type,
+      required final String content,
+      final String? imageUrl,
+      final String? s3Key,
+      required final DateTime timestamp,
+      final List<ReactionDetailEntity>? reactions}) = _$MessageEntityImpl;
 
   @override
-  String? get id;
+  String get id;
   @override
   String get conversationId;
   @override
-  String get userId;
+  MessageSenderEntity get sender;
   @override
-  String get user;
+  MessageType get type;
   @override
-  String get avatar;
+  String get content;
   @override
-  String get messageType;
+  String?
+      get imageUrl; // In Domain, we prefer direct image URL if type is image
   @override
-  String get message;
-  @override
-  List<ReactionDetailEntity> get reactions;
+  String? get s3Key; // Keep s3Key if needed for other operations, e.g., delete
   @override
   DateTime get timestamp;
+  @override
+  List<ReactionDetailEntity>? get reactions;
 
   /// Create a copy of MessageEntity
   /// with the given fields replaced by the non-null parameter values.

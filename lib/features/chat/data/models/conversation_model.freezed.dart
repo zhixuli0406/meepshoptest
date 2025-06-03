@@ -22,27 +22,17 @@ ConversationModel _$ConversationModelFromJson(Map<String, dynamic> json) {
 mixin _$ConversationModel {
   @JsonKey(name: '_id')
   String get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'title')
+  String? get name => throw _privateConstructorUsedError;
   List<ParticipantModel> get participants => throw _privateConstructorUsedError;
+  @JsonKey(name: 'createdAt')
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'updatedAt')
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'lastMessageText')
-  String? get lastMessage =>
-      throw _privateConstructorUsedError; // Maps to 'lastMessageText' and is nullable
-  @JsonKey(
-      name: 'lastMessageTimestamp',
-      fromJson: _dateTimeFromNullableTimestamp,
-      toJson: _dateTimeToNullableIso8601String)
-  DateTime? get timestamp =>
-      throw _privateConstructorUsedError; // Maps to 'lastMessageTimestamp', is nullable, and uses custom converters
-  @JsonKey(
-      fromJson: _dateTimeFromNullableTimestamp,
-      toJson: _dateTimeToNullableIso8601String)
-  DateTime? get createdAt =>
-      throw _privateConstructorUsedError; // Added createdAt, nullable
-  @JsonKey(
-      fromJson: _dateTimeFromNullableTimestamp,
-      toJson: _dateTimeToNullableIso8601String)
-  DateTime? get updatedAt =>
-      throw _privateConstructorUsedError; // Added updatedAt, nullable
-  int? get legacyConvId => throw _privateConstructorUsedError;
+  String? get lastMessage => throw _privateConstructorUsedError;
+  @JsonKey(name: 'lastMessageTimestamp')
+  DateTime? get timestamp => throw _privateConstructorUsedError;
 
   /// Serializes this ConversationModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -62,22 +52,12 @@ abstract class $ConversationModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: '_id') String id,
+      @JsonKey(name: 'title') String? name,
       List<ParticipantModel> participants,
+      @JsonKey(name: 'createdAt') DateTime createdAt,
+      @JsonKey(name: 'updatedAt') DateTime? updatedAt,
       @JsonKey(name: 'lastMessageText') String? lastMessage,
-      @JsonKey(
-          name: 'lastMessageTimestamp',
-          fromJson: _dateTimeFromNullableTimestamp,
-          toJson: _dateTimeToNullableIso8601String)
-      DateTime? timestamp,
-      @JsonKey(
-          fromJson: _dateTimeFromNullableTimestamp,
-          toJson: _dateTimeToNullableIso8601String)
-      DateTime? createdAt,
-      @JsonKey(
-          fromJson: _dateTimeFromNullableTimestamp,
-          toJson: _dateTimeToNullableIso8601String)
-      DateTime? updatedAt,
-      int? legacyConvId});
+      @JsonKey(name: 'lastMessageTimestamp') DateTime? timestamp});
 }
 
 /// @nodoc
@@ -96,22 +76,34 @@ class _$ConversationModelCopyWithImpl<$Res, $Val extends ConversationModel>
   @override
   $Res call({
     Object? id = null,
+    Object? name = freezed,
     Object? participants = null,
+    Object? createdAt = null,
+    Object? updatedAt = freezed,
     Object? lastMessage = freezed,
     Object? timestamp = freezed,
-    Object? createdAt = freezed,
-    Object? updatedAt = freezed,
-    Object? legacyConvId = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
       participants: null == participants
           ? _value.participants
           : participants // ignore: cast_nullable_to_non_nullable
               as List<ParticipantModel>,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       lastMessage: freezed == lastMessage
           ? _value.lastMessage
           : lastMessage // ignore: cast_nullable_to_non_nullable
@@ -120,18 +112,6 @@ class _$ConversationModelCopyWithImpl<$Res, $Val extends ConversationModel>
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      legacyConvId: freezed == legacyConvId
-          ? _value.legacyConvId
-          : legacyConvId // ignore: cast_nullable_to_non_nullable
-              as int?,
     ) as $Val);
   }
 }
@@ -146,22 +126,12 @@ abstract class _$$ConversationModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: '_id') String id,
+      @JsonKey(name: 'title') String? name,
       List<ParticipantModel> participants,
+      @JsonKey(name: 'createdAt') DateTime createdAt,
+      @JsonKey(name: 'updatedAt') DateTime? updatedAt,
       @JsonKey(name: 'lastMessageText') String? lastMessage,
-      @JsonKey(
-          name: 'lastMessageTimestamp',
-          fromJson: _dateTimeFromNullableTimestamp,
-          toJson: _dateTimeToNullableIso8601String)
-      DateTime? timestamp,
-      @JsonKey(
-          fromJson: _dateTimeFromNullableTimestamp,
-          toJson: _dateTimeToNullableIso8601String)
-      DateTime? createdAt,
-      @JsonKey(
-          fromJson: _dateTimeFromNullableTimestamp,
-          toJson: _dateTimeToNullableIso8601String)
-      DateTime? updatedAt,
-      int? legacyConvId});
+      @JsonKey(name: 'lastMessageTimestamp') DateTime? timestamp});
 }
 
 /// @nodoc
@@ -178,22 +148,34 @@ class __$$ConversationModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? name = freezed,
     Object? participants = null,
+    Object? createdAt = null,
+    Object? updatedAt = freezed,
     Object? lastMessage = freezed,
     Object? timestamp = freezed,
-    Object? createdAt = freezed,
-    Object? updatedAt = freezed,
-    Object? legacyConvId = freezed,
   }) {
     return _then(_$ConversationModelImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
       participants: null == participants
           ? _value._participants
           : participants // ignore: cast_nullable_to_non_nullable
               as List<ParticipantModel>,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       lastMessage: freezed == lastMessage
           ? _value.lastMessage
           : lastMessage // ignore: cast_nullable_to_non_nullable
@@ -202,44 +184,23 @@ class __$$ConversationModelImplCopyWithImpl<$Res>
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      legacyConvId: freezed == legacyConvId
-          ? _value.legacyConvId
-          : legacyConvId // ignore: cast_nullable_to_non_nullable
-              as int?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$ConversationModelImpl implements _ConversationModel {
+class _$ConversationModelImpl extends _ConversationModel {
   const _$ConversationModelImpl(
       {@JsonKey(name: '_id') required this.id,
+      @JsonKey(name: 'title') this.name,
       required final List<ParticipantModel> participants,
+      @JsonKey(name: 'createdAt') required this.createdAt,
+      @JsonKey(name: 'updatedAt') this.updatedAt,
       @JsonKey(name: 'lastMessageText') this.lastMessage,
-      @JsonKey(
-          name: 'lastMessageTimestamp',
-          fromJson: _dateTimeFromNullableTimestamp,
-          toJson: _dateTimeToNullableIso8601String)
-      this.timestamp,
-      @JsonKey(
-          fromJson: _dateTimeFromNullableTimestamp,
-          toJson: _dateTimeToNullableIso8601String)
-      this.createdAt,
-      @JsonKey(
-          fromJson: _dateTimeFromNullableTimestamp,
-          toJson: _dateTimeToNullableIso8601String)
-      this.updatedAt,
-      this.legacyConvId})
-      : _participants = participants;
+      @JsonKey(name: 'lastMessageTimestamp') this.timestamp})
+      : _participants = participants,
+        super._();
 
   factory _$ConversationModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConversationModelImplFromJson(json);
@@ -247,6 +208,9 @@ class _$ConversationModelImpl implements _ConversationModel {
   @override
   @JsonKey(name: '_id')
   final String id;
+  @override
+  @JsonKey(name: 'title')
+  final String? name;
   final List<ParticipantModel> _participants;
   @override
   List<ParticipantModel> get participants {
@@ -256,34 +220,21 @@ class _$ConversationModelImpl implements _ConversationModel {
   }
 
   @override
+  @JsonKey(name: 'createdAt')
+  final DateTime createdAt;
+  @override
+  @JsonKey(name: 'updatedAt')
+  final DateTime? updatedAt;
+  @override
   @JsonKey(name: 'lastMessageText')
   final String? lastMessage;
-// Maps to 'lastMessageText' and is nullable
   @override
-  @JsonKey(
-      name: 'lastMessageTimestamp',
-      fromJson: _dateTimeFromNullableTimestamp,
-      toJson: _dateTimeToNullableIso8601String)
+  @JsonKey(name: 'lastMessageTimestamp')
   final DateTime? timestamp;
-// Maps to 'lastMessageTimestamp', is nullable, and uses custom converters
-  @override
-  @JsonKey(
-      fromJson: _dateTimeFromNullableTimestamp,
-      toJson: _dateTimeToNullableIso8601String)
-  final DateTime? createdAt;
-// Added createdAt, nullable
-  @override
-  @JsonKey(
-      fromJson: _dateTimeFromNullableTimestamp,
-      toJson: _dateTimeToNullableIso8601String)
-  final DateTime? updatedAt;
-// Added updatedAt, nullable
-  @override
-  final int? legacyConvId;
 
   @override
   String toString() {
-    return 'ConversationModel(id: $id, participants: $participants, lastMessage: $lastMessage, timestamp: $timestamp, createdAt: $createdAt, updatedAt: $updatedAt, legacyConvId: $legacyConvId)';
+    return 'ConversationModel(id: $id, name: $name, participants: $participants, createdAt: $createdAt, updatedAt: $updatedAt, lastMessage: $lastMessage, timestamp: $timestamp)';
   }
 
   @override
@@ -292,18 +243,17 @@ class _$ConversationModelImpl implements _ConversationModel {
         (other.runtimeType == runtimeType &&
             other is _$ConversationModelImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
             const DeepCollectionEquality()
                 .equals(other._participants, _participants) &&
-            (identical(other.lastMessage, lastMessage) ||
-                other.lastMessage == lastMessage) &&
-            (identical(other.timestamp, timestamp) ||
-                other.timestamp == timestamp) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            (identical(other.legacyConvId, legacyConvId) ||
-                other.legacyConvId == legacyConvId));
+            (identical(other.lastMessage, lastMessage) ||
+                other.lastMessage == lastMessage) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -311,12 +261,12 @@ class _$ConversationModelImpl implements _ConversationModel {
   int get hashCode => Object.hash(
       runtimeType,
       id,
+      name,
       const DeepCollectionEquality().hash(_participants),
-      lastMessage,
-      timestamp,
       createdAt,
       updatedAt,
-      legacyConvId);
+      lastMessage,
+      timestamp);
 
   /// Create a copy of ConversationModel
   /// with the given fields replaced by the non-null parameter values.
@@ -335,25 +285,17 @@ class _$ConversationModelImpl implements _ConversationModel {
   }
 }
 
-abstract class _ConversationModel implements ConversationModel {
+abstract class _ConversationModel extends ConversationModel {
   const factory _ConversationModel(
-      {@JsonKey(name: '_id') required final String id,
-      required final List<ParticipantModel> participants,
-      @JsonKey(name: 'lastMessageText') final String? lastMessage,
-      @JsonKey(
-          name: 'lastMessageTimestamp',
-          fromJson: _dateTimeFromNullableTimestamp,
-          toJson: _dateTimeToNullableIso8601String)
-      final DateTime? timestamp,
-      @JsonKey(
-          fromJson: _dateTimeFromNullableTimestamp,
-          toJson: _dateTimeToNullableIso8601String)
-      final DateTime? createdAt,
-      @JsonKey(
-          fromJson: _dateTimeFromNullableTimestamp,
-          toJson: _dateTimeToNullableIso8601String)
-      final DateTime? updatedAt,
-      final int? legacyConvId}) = _$ConversationModelImpl;
+          {@JsonKey(name: '_id') required final String id,
+          @JsonKey(name: 'title') final String? name,
+          required final List<ParticipantModel> participants,
+          @JsonKey(name: 'createdAt') required final DateTime createdAt,
+          @JsonKey(name: 'updatedAt') final DateTime? updatedAt,
+          @JsonKey(name: 'lastMessageText') final String? lastMessage,
+          @JsonKey(name: 'lastMessageTimestamp') final DateTime? timestamp}) =
+      _$ConversationModelImpl;
+  const _ConversationModel._() : super._();
 
   factory _ConversationModel.fromJson(Map<String, dynamic> json) =
       _$ConversationModelImpl.fromJson;
@@ -362,29 +304,22 @@ abstract class _ConversationModel implements ConversationModel {
   @JsonKey(name: '_id')
   String get id;
   @override
+  @JsonKey(name: 'title')
+  String? get name;
+  @override
   List<ParticipantModel> get participants;
   @override
+  @JsonKey(name: 'createdAt')
+  DateTime get createdAt;
+  @override
+  @JsonKey(name: 'updatedAt')
+  DateTime? get updatedAt;
+  @override
   @JsonKey(name: 'lastMessageText')
-  String? get lastMessage; // Maps to 'lastMessageText' and is nullable
+  String? get lastMessage;
   @override
-  @JsonKey(
-      name: 'lastMessageTimestamp',
-      fromJson: _dateTimeFromNullableTimestamp,
-      toJson: _dateTimeToNullableIso8601String)
-  DateTime?
-      get timestamp; // Maps to 'lastMessageTimestamp', is nullable, and uses custom converters
-  @override
-  @JsonKey(
-      fromJson: _dateTimeFromNullableTimestamp,
-      toJson: _dateTimeToNullableIso8601String)
-  DateTime? get createdAt; // Added createdAt, nullable
-  @override
-  @JsonKey(
-      fromJson: _dateTimeFromNullableTimestamp,
-      toJson: _dateTimeToNullableIso8601String)
-  DateTime? get updatedAt; // Added updatedAt, nullable
-  @override
-  int? get legacyConvId;
+  @JsonKey(name: 'lastMessageTimestamp')
+  DateTime? get timestamp;
 
   /// Create a copy of ConversationModel
   /// with the given fields replaced by the non-null parameter values.

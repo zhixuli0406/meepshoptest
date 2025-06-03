@@ -253,4 +253,76 @@ class AuthService {
       );
     }
   }
+
+  Future<List<UserModel>> getUsers(String token) async {
+    try {
+      print('[AuthService-GetUsers] Requesting all users with token.');
+      final response = await _dio.get(
+        '$_apiBaseUrl/users', // Assuming GET /users endpoint
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      print('[AuthService-GetUsers] Response status: ${response.statusCode}');
+      print('[AuthService-GetUsers] Response data: ${response.data}');
+
+      if (response.statusCode == 200 && response.data != null) {
+        final responseData = response.data;
+        List<dynamic>? usersJson;
+
+        if (responseData is Map<String, dynamic>) {
+          if (responseData.containsKey('data') &&
+              responseData['data'] is Map<String, dynamic> &&
+              responseData['data'].containsKey('users')) {
+            usersJson = responseData['data']['users'] as List<dynamic>?;
+          } else if (responseData.containsKey('users')) {
+            usersJson = responseData['users'] as List<dynamic>?;
+          } else {
+            // If the response itself is the list of users (e.g. from a simpler API or after ApiClient processing)
+            usersJson = responseData['data'] as List<dynamic>?;
+          }
+        } else if (responseData is List) {
+          usersJson = responseData;
+        }
+
+        if (usersJson != null) {
+          return usersJson
+              .map(
+                (userJson) =>
+                    UserModel.fromJson(userJson as Map<String, dynamic>),
+              )
+              .toList();
+        }
+      }
+      // If we reach here, the response structure was not as expected or status code was not 200
+      print(
+        '[AuthService-GetUsers] ServerError: Unexpected response structure or status code.',
+      );
+      throw Failure.serverError(
+        message:
+            response.data?['message'] ??
+            'Failed to get users: Unexpected response structure or status code ${response.statusCode}',
+      );
+    } on DioException catch (e) {
+      print('[AuthService-GetUsers] DioException: ${e.response?.data}');
+      if (e.response?.statusCode == 401) {
+        throw Failure.unauthorized(
+          message:
+              e.response?.data?['message'] ??
+              'Failed to get users: Unauthorized',
+        );
+      }
+      throw Failure.serverError(
+        message:
+            e.response?.data?['message'] ??
+            e.message ??
+            'Failed to get users: Server error',
+      );
+    } catch (e, s) {
+      print('[AuthService-GetUsers] Generic error: $e, Stacktrace: $s');
+      throw Failure.unknownError(
+        message: 'An unknown error occurred while fetching users: $e',
+        error: e,
+        stackTrace: s,
+      );
+    }
+  }
 }

@@ -1,9 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:meepshoptest/features/chat/data/models/sender_model.dart';
-import 'package:meepshoptest/features/message/domain/entities/message_entity.dart';
-import 'package:meepshoptest/features/message/domain/entities/message_sender_entity.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_entity.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_sender_entity.dart';
 import 'package:meepshoptest/features/chat/domain/entities/reaction_type.dart';
 import 'package:meepshoptest/features/chat/domain/entities/reactions_entity.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_type.dart';
 
 part 'message_model.freezed.dart';
 part 'message_model.g.dart';
@@ -48,6 +49,7 @@ List<ReactionDetailEntity> _convertApiReactionsToEntity(
 
 extension MessageModelX on MessageModel {
   MessageEntity toEntity() {
+    print('[MessageModel] Original type from WebSocket: "$type"');
     MessageType domainType;
     switch (type.toLowerCase()) {
       case 'text':
@@ -60,8 +62,12 @@ extension MessageModelX on MessageModel {
         domainType = MessageType.system;
         break;
       default:
+        print(
+          '[MessageModel] Unknown type "$type" mapped to MessageType.unknown',
+        );
         domainType = MessageType.unknown;
     }
+    print('[MessageModel] Mapped to domainType: $domainType');
 
     MessageSenderEntity senderEntity;
     if (sender != null) {
@@ -84,7 +90,7 @@ extension MessageModelX on MessageModel {
       sender: senderEntity,
       type: domainType,
       content: content,
-      imageUrl: null,
+      imageUrl: (domainType == MessageType.image) ? content : null,
       s3Key: null,
       timestamp: createdAt,
       reactions: _convertApiReactionsToEntity(reactions),

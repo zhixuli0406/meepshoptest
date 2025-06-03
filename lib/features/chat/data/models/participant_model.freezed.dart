@@ -134,11 +134,12 @@ class __$$ParticipantModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ParticipantModelImpl implements _ParticipantModel {
+class _$ParticipantModelImpl extends _ParticipantModel {
   const _$ParticipantModelImpl(
       {@JsonKey(name: '_id') this.userId,
       @JsonKey(name: 'username') this.user,
-      this.avatar});
+      this.avatar})
+      : super._();
 
   factory _$ParticipantModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ParticipantModelImplFromJson(json);
@@ -188,11 +189,12 @@ class _$ParticipantModelImpl implements _ParticipantModel {
   }
 }
 
-abstract class _ParticipantModel implements ParticipantModel {
+abstract class _ParticipantModel extends ParticipantModel {
   const factory _ParticipantModel(
       {@JsonKey(name: '_id') final String? userId,
       @JsonKey(name: 'username') final String? user,
       final String? avatar}) = _$ParticipantModelImpl;
+  const _ParticipantModel._() : super._();
 
   factory _ParticipantModel.fromJson(Map<String, dynamic> json) =
       _$ParticipantModelImpl.fromJson;

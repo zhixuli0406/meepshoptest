@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:meepshoptest/features/chat/domain/entities/conversation_entity.dart';
 import 'package:meepshoptest/features/chat/presentation/pages/chat_message_page.dart';
 import 'package:meepshoptest/features/chat/presentation/pages/conversation_list_page.dart';
+import 'package:meepshoptest/features/chat/presentation/pages/create_conversation_page.dart';
 import 'package:meepshoptest/core/shared/widgets/full_screen_image_viewer.dart';
 import 'package:meepshoptest/features/auth/presentation/pages/register_page.dart';
 import 'package:meepshoptest/features/auth/presentation/pages/login_page.dart';
@@ -46,6 +47,7 @@ class AppRouter extends _$AppRouter {
       page: ChatMessageRoute.page,
     ),
     AutoRoute(page: FullScreenImageViewerRoute.page, path: '/image-viewer'),
+    AutoRoute(page: CreateConversationRoute.page, path: '/create-conversation'),
   ];
 
   @override

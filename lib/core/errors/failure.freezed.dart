@@ -24,6 +24,9 @@ mixin _$Failure {
         serverError,
     required TResult Function(String? message) networkError,
     required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message, String? errorCode) conflict,
     required TResult Function(
@@ -45,6 +48,9 @@ mixin _$Failure {
         serverError,
     TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message, String? errorCode)? conflict,
     TResult? Function(
@@ -65,6 +71,9 @@ mixin _$Failure {
         serverError,
     TResult Function(String? message)? networkError,
     TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
     TResult Function(String? message)? notFound,
     TResult Function(String? message, String? errorCode)? conflict,
     TResult Function(
@@ -82,7 +91,10 @@ mixin _$Failure {
   TResult map<TResult extends Object?>({
     required TResult Function(ServerError value) serverError,
     required TResult Function(NetworkError value) networkError,
-    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(ConflictError value) conflict,
     required TResult Function(ValidationError value) validationError,
@@ -96,7 +108,10 @@ mixin _$Failure {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerError value)? serverError,
     TResult? Function(NetworkError value)? networkError,
-    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(ConflictError value)? conflict,
     TResult? Function(ValidationError value)? validationError,
@@ -110,7 +125,10 @@ mixin _$Failure {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerError value)? serverError,
     TResult Function(NetworkError value)? networkError,
-    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(ConflictError value)? conflict,
     TResult Function(ValidationError value)? validationError,
@@ -133,7 +151,7 @@ abstract class $FailureCopyWith<$Res> {
   factory $FailureCopyWith(Failure value, $Res Function(Failure) then) =
       _$FailureCopyWithImpl<$Res, Failure>;
   @useResult
-  $Res call({String? message});
+  $Res call({String message});
 }
 
 /// @nodoc
@@ -151,13 +169,13 @@ class _$FailureCopyWithImpl<$Res, $Val extends Failure>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? message = freezed,
+    Object? message = null,
   }) {
     return _then(_value.copyWith(
-      message: freezed == message
-          ? _value.message
+      message: null == message
+          ? _value.message!
           : message // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
     ) as $Val);
   }
 }
@@ -281,6 +299,9 @@ class _$ServerErrorImpl implements ServerError {
         serverError,
     required TResult Function(String? message) networkError,
     required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message, String? errorCode) conflict,
     required TResult Function(
@@ -305,6 +326,9 @@ class _$ServerErrorImpl implements ServerError {
         serverError,
     TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message, String? errorCode)? conflict,
     TResult? Function(
@@ -328,6 +352,9 @@ class _$ServerErrorImpl implements ServerError {
         serverError,
     TResult Function(String? message)? networkError,
     TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
     TResult Function(String? message)? notFound,
     TResult Function(String? message, String? errorCode)? conflict,
     TResult Function(
@@ -351,7 +378,10 @@ class _$ServerErrorImpl implements ServerError {
   TResult map<TResult extends Object?>({
     required TResult Function(ServerError value) serverError,
     required TResult Function(NetworkError value) networkError,
-    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(ConflictError value) conflict,
     required TResult Function(ValidationError value) validationError,
@@ -368,7 +398,10 @@ class _$ServerErrorImpl implements ServerError {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerError value)? serverError,
     TResult? Function(NetworkError value)? networkError,
-    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(ConflictError value)? conflict,
     TResult? Function(ValidationError value)? validationError,
@@ -385,7 +418,10 @@ class _$ServerErrorImpl implements ServerError {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerError value)? serverError,
     TResult Function(NetworkError value)? networkError,
-    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(ConflictError value)? conflict,
     TResult Function(ValidationError value)? validationError,
@@ -498,6 +534,9 @@ class _$NetworkErrorImpl implements NetworkError {
         serverError,
     required TResult Function(String? message) networkError,
     required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message, String? errorCode) conflict,
     required TResult Function(
@@ -522,6 +561,9 @@ class _$NetworkErrorImpl implements NetworkError {
         serverError,
     TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message, String? errorCode)? conflict,
     TResult? Function(
@@ -545,6 +587,9 @@ class _$NetworkErrorImpl implements NetworkError {
         serverError,
     TResult Function(String? message)? networkError,
     TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
     TResult Function(String? message)? notFound,
     TResult Function(String? message, String? errorCode)? conflict,
     TResult Function(
@@ -568,7 +613,10 @@ class _$NetworkErrorImpl implements NetworkError {
   TResult map<TResult extends Object?>({
     required TResult Function(ServerError value) serverError,
     required TResult Function(NetworkError value) networkError,
-    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(ConflictError value) conflict,
     required TResult Function(ValidationError value) validationError,
@@ -585,7 +633,10 @@ class _$NetworkErrorImpl implements NetworkError {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerError value)? serverError,
     TResult? Function(NetworkError value)? networkError,
-    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(ConflictError value)? conflict,
     TResult? Function(ValidationError value)? validationError,
@@ -602,7 +653,10 @@ class _$NetworkErrorImpl implements NetworkError {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerError value)? serverError,
     TResult Function(NetworkError value)? networkError,
-    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(ConflictError value)? conflict,
     TResult Function(ValidationError value)? validationError,
@@ -634,22 +688,22 @@ abstract class NetworkError implements Failure {
 }
 
 /// @nodoc
-abstract class _$$UnauthorizedFailureImplCopyWith<$Res>
+abstract class _$$UnauthorizedImplCopyWith<$Res>
     implements $FailureCopyWith<$Res> {
-  factory _$$UnauthorizedFailureImplCopyWith(_$UnauthorizedFailureImpl value,
-          $Res Function(_$UnauthorizedFailureImpl) then) =
-      __$$UnauthorizedFailureImplCopyWithImpl<$Res>;
+  factory _$$UnauthorizedImplCopyWith(
+          _$UnauthorizedImpl value, $Res Function(_$UnauthorizedImpl) then) =
+      __$$UnauthorizedImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? message});
 }
 
 /// @nodoc
-class __$$UnauthorizedFailureImplCopyWithImpl<$Res>
-    extends _$FailureCopyWithImpl<$Res, _$UnauthorizedFailureImpl>
-    implements _$$UnauthorizedFailureImplCopyWith<$Res> {
-  __$$UnauthorizedFailureImplCopyWithImpl(_$UnauthorizedFailureImpl _value,
-      $Res Function(_$UnauthorizedFailureImpl) _then)
+class __$$UnauthorizedImplCopyWithImpl<$Res>
+    extends _$FailureCopyWithImpl<$Res, _$UnauthorizedImpl>
+    implements _$$UnauthorizedImplCopyWith<$Res> {
+  __$$UnauthorizedImplCopyWithImpl(
+      _$UnauthorizedImpl _value, $Res Function(_$UnauthorizedImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of Failure
@@ -659,7 +713,7 @@ class __$$UnauthorizedFailureImplCopyWithImpl<$Res>
   $Res call({
     Object? message = freezed,
   }) {
-    return _then(_$UnauthorizedFailureImpl(
+    return _then(_$UnauthorizedImpl(
       message: freezed == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -670,8 +724,8 @@ class __$$UnauthorizedFailureImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
-  const _$UnauthorizedFailureImpl({this.message});
+class _$UnauthorizedImpl implements Unauthorized {
+  const _$UnauthorizedImpl({this.message});
 
   @override
   final String? message;
@@ -685,7 +739,7 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UnauthorizedFailureImpl &&
+            other is _$UnauthorizedImpl &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -697,9 +751,8 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$UnauthorizedFailureImplCopyWith<_$UnauthorizedFailureImpl> get copyWith =>
-      __$$UnauthorizedFailureImplCopyWithImpl<_$UnauthorizedFailureImpl>(
-          this, _$identity);
+  _$$UnauthorizedImplCopyWith<_$UnauthorizedImpl> get copyWith =>
+      __$$UnauthorizedImplCopyWithImpl<_$UnauthorizedImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -709,6 +762,9 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
         serverError,
     required TResult Function(String? message) networkError,
     required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message, String? errorCode) conflict,
     required TResult Function(
@@ -733,6 +789,9 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
         serverError,
     TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message, String? errorCode)? conflict,
     TResult? Function(
@@ -756,6 +815,9 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
         serverError,
     TResult Function(String? message)? networkError,
     TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
     TResult Function(String? message)? notFound,
     TResult Function(String? message, String? errorCode)? conflict,
     TResult Function(
@@ -779,7 +841,10 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
   TResult map<TResult extends Object?>({
     required TResult Function(ServerError value) serverError,
     required TResult Function(NetworkError value) networkError,
-    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(ConflictError value) conflict,
     required TResult Function(ValidationError value) validationError,
@@ -796,7 +861,10 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerError value)? serverError,
     TResult? Function(NetworkError value)? networkError,
-    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(ConflictError value)? conflict,
     TResult? Function(ValidationError value)? validationError,
@@ -813,7 +881,10 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerError value)? serverError,
     TResult Function(NetworkError value)? networkError,
-    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(ConflictError value)? conflict,
     TResult Function(ValidationError value)? validationError,
@@ -830,9 +901,8 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
   }
 }
 
-abstract class UnauthorizedFailure implements Failure {
-  const factory UnauthorizedFailure({final String? message}) =
-      _$UnauthorizedFailureImpl;
+abstract class Unauthorized implements Failure {
+  const factory Unauthorized({final String? message}) = _$UnauthorizedImpl;
 
   @override
   String? get message;
@@ -841,7 +911,694 @@ abstract class UnauthorizedFailure implements Failure {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UnauthorizedFailureImplCopyWith<_$UnauthorizedFailureImpl> get copyWith =>
+  _$$UnauthorizedImplCopyWith<_$UnauthorizedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$CacheErrorImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
+  factory _$$CacheErrorImplCopyWith(
+          _$CacheErrorImpl value, $Res Function(_$CacheErrorImpl) then) =
+      __$$CacheErrorImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? message});
+}
+
+/// @nodoc
+class __$$CacheErrorImplCopyWithImpl<$Res>
+    extends _$FailureCopyWithImpl<$Res, _$CacheErrorImpl>
+    implements _$$CacheErrorImplCopyWith<$Res> {
+  __$$CacheErrorImplCopyWithImpl(
+      _$CacheErrorImpl _value, $Res Function(_$CacheErrorImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = freezed,
+  }) {
+    return _then(_$CacheErrorImpl(
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$CacheErrorImpl implements CacheError {
+  const _$CacheErrorImpl({this.message});
+
+  @override
+  final String? message;
+
+  @override
+  String toString() {
+    return 'Failure.cacheError(message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CacheErrorImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CacheErrorImplCopyWith<_$CacheErrorImpl> get copyWith =>
+      __$$CacheErrorImplCopyWithImpl<_$CacheErrorImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? message, String? errorCode,
+            List<ErrorDetail>? details, int? statusCode)
+        serverError,
+    required TResult Function(String? message) networkError,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message, String? errorCode) conflict,
+    required TResult Function(
+            String? message, String? errorCode, List<ErrorDetail>? details)
+        validationError,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) localCacheError,
+    required TResult Function(
+            String? message, Object? error, StackTrace? stackTrace)
+        unknownError,
+    required TResult Function(String? message, Failure originalFailure)
+        multiStageError,
+  }) {
+    return cacheError(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? message, String? errorCode,
+            List<ErrorDetail>? details, int? statusCode)?
+        serverError,
+    TResult? Function(String? message)? networkError,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message, String? errorCode)? conflict,
+    TResult? Function(
+            String? message, String? errorCode, List<ErrorDetail>? details)?
+        validationError,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? localCacheError,
+    TResult? Function(String? message, Object? error, StackTrace? stackTrace)?
+        unknownError,
+    TResult? Function(String? message, Failure originalFailure)?
+        multiStageError,
+  }) {
+    return cacheError?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? message, String? errorCode,
+            List<ErrorDetail>? details, int? statusCode)?
+        serverError,
+    TResult Function(String? message)? networkError,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message, String? errorCode)? conflict,
+    TResult Function(
+            String? message, String? errorCode, List<ErrorDetail>? details)?
+        validationError,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? localCacheError,
+    TResult Function(String? message, Object? error, StackTrace? stackTrace)?
+        unknownError,
+    TResult Function(String? message, Failure originalFailure)? multiStageError,
+    required TResult orElse(),
+  }) {
+    if (cacheError != null) {
+      return cacheError(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServerError value) serverError,
+    required TResult Function(NetworkError value) networkError,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
+    required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(ConflictError value) conflict,
+    required TResult Function(ValidationError value) validationError,
+    required TResult Function(ForbiddenFailure value) forbidden,
+    required TResult Function(LocalCacheError value) localCacheError,
+    required TResult Function(UnknownError value) unknownError,
+    required TResult Function(MultiStageError value) multiStageError,
+  }) {
+    return cacheError(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServerError value)? serverError,
+    TResult? Function(NetworkError value)? networkError,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
+    TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(ConflictError value)? conflict,
+    TResult? Function(ValidationError value)? validationError,
+    TResult? Function(ForbiddenFailure value)? forbidden,
+    TResult? Function(LocalCacheError value)? localCacheError,
+    TResult? Function(UnknownError value)? unknownError,
+    TResult? Function(MultiStageError value)? multiStageError,
+  }) {
+    return cacheError?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServerError value)? serverError,
+    TResult Function(NetworkError value)? networkError,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
+    TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(ConflictError value)? conflict,
+    TResult Function(ValidationError value)? validationError,
+    TResult Function(ForbiddenFailure value)? forbidden,
+    TResult Function(LocalCacheError value)? localCacheError,
+    TResult Function(UnknownError value)? unknownError,
+    TResult Function(MultiStageError value)? multiStageError,
+    required TResult orElse(),
+  }) {
+    if (cacheError != null) {
+      return cacheError(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class CacheError implements Failure {
+  const factory CacheError({final String? message}) = _$CacheErrorImpl;
+
+  @override
+  String? get message;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CacheErrorImplCopyWith<_$CacheErrorImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UnexpectedErrorImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
+  factory _$$UnexpectedErrorImplCopyWith(_$UnexpectedErrorImpl value,
+          $Res Function(_$UnexpectedErrorImpl) then) =
+      __$$UnexpectedErrorImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? message});
+}
+
+/// @nodoc
+class __$$UnexpectedErrorImplCopyWithImpl<$Res>
+    extends _$FailureCopyWithImpl<$Res, _$UnexpectedErrorImpl>
+    implements _$$UnexpectedErrorImplCopyWith<$Res> {
+  __$$UnexpectedErrorImplCopyWithImpl(
+      _$UnexpectedErrorImpl _value, $Res Function(_$UnexpectedErrorImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = freezed,
+  }) {
+    return _then(_$UnexpectedErrorImpl(
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UnexpectedErrorImpl implements UnexpectedError {
+  const _$UnexpectedErrorImpl({this.message});
+
+  @override
+  final String? message;
+
+  @override
+  String toString() {
+    return 'Failure.unexpectedError(message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UnexpectedErrorImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UnexpectedErrorImplCopyWith<_$UnexpectedErrorImpl> get copyWith =>
+      __$$UnexpectedErrorImplCopyWithImpl<_$UnexpectedErrorImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? message, String? errorCode,
+            List<ErrorDetail>? details, int? statusCode)
+        serverError,
+    required TResult Function(String? message) networkError,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message, String? errorCode) conflict,
+    required TResult Function(
+            String? message, String? errorCode, List<ErrorDetail>? details)
+        validationError,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) localCacheError,
+    required TResult Function(
+            String? message, Object? error, StackTrace? stackTrace)
+        unknownError,
+    required TResult Function(String? message, Failure originalFailure)
+        multiStageError,
+  }) {
+    return unexpectedError(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? message, String? errorCode,
+            List<ErrorDetail>? details, int? statusCode)?
+        serverError,
+    TResult? Function(String? message)? networkError,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message, String? errorCode)? conflict,
+    TResult? Function(
+            String? message, String? errorCode, List<ErrorDetail>? details)?
+        validationError,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? localCacheError,
+    TResult? Function(String? message, Object? error, StackTrace? stackTrace)?
+        unknownError,
+    TResult? Function(String? message, Failure originalFailure)?
+        multiStageError,
+  }) {
+    return unexpectedError?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? message, String? errorCode,
+            List<ErrorDetail>? details, int? statusCode)?
+        serverError,
+    TResult Function(String? message)? networkError,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message, String? errorCode)? conflict,
+    TResult Function(
+            String? message, String? errorCode, List<ErrorDetail>? details)?
+        validationError,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? localCacheError,
+    TResult Function(String? message, Object? error, StackTrace? stackTrace)?
+        unknownError,
+    TResult Function(String? message, Failure originalFailure)? multiStageError,
+    required TResult orElse(),
+  }) {
+    if (unexpectedError != null) {
+      return unexpectedError(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServerError value) serverError,
+    required TResult Function(NetworkError value) networkError,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
+    required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(ConflictError value) conflict,
+    required TResult Function(ValidationError value) validationError,
+    required TResult Function(ForbiddenFailure value) forbidden,
+    required TResult Function(LocalCacheError value) localCacheError,
+    required TResult Function(UnknownError value) unknownError,
+    required TResult Function(MultiStageError value) multiStageError,
+  }) {
+    return unexpectedError(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServerError value)? serverError,
+    TResult? Function(NetworkError value)? networkError,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
+    TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(ConflictError value)? conflict,
+    TResult? Function(ValidationError value)? validationError,
+    TResult? Function(ForbiddenFailure value)? forbidden,
+    TResult? Function(LocalCacheError value)? localCacheError,
+    TResult? Function(UnknownError value)? unknownError,
+    TResult? Function(MultiStageError value)? multiStageError,
+  }) {
+    return unexpectedError?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServerError value)? serverError,
+    TResult Function(NetworkError value)? networkError,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
+    TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(ConflictError value)? conflict,
+    TResult Function(ValidationError value)? validationError,
+    TResult Function(ForbiddenFailure value)? forbidden,
+    TResult Function(LocalCacheError value)? localCacheError,
+    TResult Function(UnknownError value)? unknownError,
+    TResult Function(MultiStageError value)? multiStageError,
+    required TResult orElse(),
+  }) {
+    if (unexpectedError != null) {
+      return unexpectedError(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class UnexpectedError implements Failure {
+  const factory UnexpectedError({final String? message}) =
+      _$UnexpectedErrorImpl;
+
+  @override
+  String? get message;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UnexpectedErrorImplCopyWith<_$UnexpectedErrorImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$CustomErrorImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
+  factory _$$CustomErrorImplCopyWith(
+          _$CustomErrorImpl value, $Res Function(_$CustomErrorImpl) then) =
+      __$$CustomErrorImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String message});
+}
+
+/// @nodoc
+class __$$CustomErrorImplCopyWithImpl<$Res>
+    extends _$FailureCopyWithImpl<$Res, _$CustomErrorImpl>
+    implements _$$CustomErrorImplCopyWith<$Res> {
+  __$$CustomErrorImplCopyWithImpl(
+      _$CustomErrorImpl _value, $Res Function(_$CustomErrorImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$CustomErrorImpl(
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$CustomErrorImpl implements CustomError {
+  const _$CustomErrorImpl({required this.message});
+
+  @override
+  final String message;
+
+  @override
+  String toString() {
+    return 'Failure.customError(message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CustomErrorImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CustomErrorImplCopyWith<_$CustomErrorImpl> get copyWith =>
+      __$$CustomErrorImplCopyWithImpl<_$CustomErrorImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? message, String? errorCode,
+            List<ErrorDetail>? details, int? statusCode)
+        serverError,
+    required TResult Function(String? message) networkError,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message, String? errorCode) conflict,
+    required TResult Function(
+            String? message, String? errorCode, List<ErrorDetail>? details)
+        validationError,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) localCacheError,
+    required TResult Function(
+            String? message, Object? error, StackTrace? stackTrace)
+        unknownError,
+    required TResult Function(String? message, Failure originalFailure)
+        multiStageError,
+  }) {
+    return customError(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? message, String? errorCode,
+            List<ErrorDetail>? details, int? statusCode)?
+        serverError,
+    TResult? Function(String? message)? networkError,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message, String? errorCode)? conflict,
+    TResult? Function(
+            String? message, String? errorCode, List<ErrorDetail>? details)?
+        validationError,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? localCacheError,
+    TResult? Function(String? message, Object? error, StackTrace? stackTrace)?
+        unknownError,
+    TResult? Function(String? message, Failure originalFailure)?
+        multiStageError,
+  }) {
+    return customError?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? message, String? errorCode,
+            List<ErrorDetail>? details, int? statusCode)?
+        serverError,
+    TResult Function(String? message)? networkError,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message, String? errorCode)? conflict,
+    TResult Function(
+            String? message, String? errorCode, List<ErrorDetail>? details)?
+        validationError,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? localCacheError,
+    TResult Function(String? message, Object? error, StackTrace? stackTrace)?
+        unknownError,
+    TResult Function(String? message, Failure originalFailure)? multiStageError,
+    required TResult orElse(),
+  }) {
+    if (customError != null) {
+      return customError(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServerError value) serverError,
+    required TResult Function(NetworkError value) networkError,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
+    required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(ConflictError value) conflict,
+    required TResult Function(ValidationError value) validationError,
+    required TResult Function(ForbiddenFailure value) forbidden,
+    required TResult Function(LocalCacheError value) localCacheError,
+    required TResult Function(UnknownError value) unknownError,
+    required TResult Function(MultiStageError value) multiStageError,
+  }) {
+    return customError(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServerError value)? serverError,
+    TResult? Function(NetworkError value)? networkError,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
+    TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(ConflictError value)? conflict,
+    TResult? Function(ValidationError value)? validationError,
+    TResult? Function(ForbiddenFailure value)? forbidden,
+    TResult? Function(LocalCacheError value)? localCacheError,
+    TResult? Function(UnknownError value)? unknownError,
+    TResult? Function(MultiStageError value)? multiStageError,
+  }) {
+    return customError?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServerError value)? serverError,
+    TResult Function(NetworkError value)? networkError,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
+    TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(ConflictError value)? conflict,
+    TResult Function(ValidationError value)? validationError,
+    TResult Function(ForbiddenFailure value)? forbidden,
+    TResult Function(LocalCacheError value)? localCacheError,
+    TResult Function(UnknownError value)? unknownError,
+    TResult Function(MultiStageError value)? multiStageError,
+    required TResult orElse(),
+  }) {
+    if (customError != null) {
+      return customError(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class CustomError implements Failure {
+  const factory CustomError({required final String message}) =
+      _$CustomErrorImpl;
+
+  @override
+  String get message;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CustomErrorImplCopyWith<_$CustomErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -921,6 +1678,9 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
         serverError,
     required TResult Function(String? message) networkError,
     required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message, String? errorCode) conflict,
     required TResult Function(
@@ -945,6 +1705,9 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
         serverError,
     TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message, String? errorCode)? conflict,
     TResult? Function(
@@ -968,6 +1731,9 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
         serverError,
     TResult Function(String? message)? networkError,
     TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
     TResult Function(String? message)? notFound,
     TResult Function(String? message, String? errorCode)? conflict,
     TResult Function(
@@ -991,7 +1757,10 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
   TResult map<TResult extends Object?>({
     required TResult Function(ServerError value) serverError,
     required TResult Function(NetworkError value) networkError,
-    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(ConflictError value) conflict,
     required TResult Function(ValidationError value) validationError,
@@ -1008,7 +1777,10 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerError value)? serverError,
     TResult? Function(NetworkError value)? networkError,
-    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(ConflictError value)? conflict,
     TResult? Function(ValidationError value)? validationError,
@@ -1025,7 +1797,10 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerError value)? serverError,
     TResult Function(NetworkError value)? networkError,
-    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(ConflictError value)? conflict,
     TResult Function(ValidationError value)? validationError,
@@ -1141,6 +1916,9 @@ class _$ConflictErrorImpl implements ConflictError {
         serverError,
     required TResult Function(String? message) networkError,
     required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message, String? errorCode) conflict,
     required TResult Function(
@@ -1165,6 +1943,9 @@ class _$ConflictErrorImpl implements ConflictError {
         serverError,
     TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message, String? errorCode)? conflict,
     TResult? Function(
@@ -1188,6 +1969,9 @@ class _$ConflictErrorImpl implements ConflictError {
         serverError,
     TResult Function(String? message)? networkError,
     TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
     TResult Function(String? message)? notFound,
     TResult Function(String? message, String? errorCode)? conflict,
     TResult Function(
@@ -1211,7 +1995,10 @@ class _$ConflictErrorImpl implements ConflictError {
   TResult map<TResult extends Object?>({
     required TResult Function(ServerError value) serverError,
     required TResult Function(NetworkError value) networkError,
-    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(ConflictError value) conflict,
     required TResult Function(ValidationError value) validationError,
@@ -1228,7 +2015,10 @@ class _$ConflictErrorImpl implements ConflictError {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerError value)? serverError,
     TResult? Function(NetworkError value)? networkError,
-    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(ConflictError value)? conflict,
     TResult? Function(ValidationError value)? validationError,
@@ -1245,7 +2035,10 @@ class _$ConflictErrorImpl implements ConflictError {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerError value)? serverError,
     TResult Function(NetworkError value)? networkError,
-    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(ConflictError value)? conflict,
     TResult Function(ValidationError value)? validationError,
@@ -1381,6 +2174,9 @@ class _$ValidationErrorImpl implements ValidationError {
         serverError,
     required TResult Function(String? message) networkError,
     required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message, String? errorCode) conflict,
     required TResult Function(
@@ -1405,6 +2201,9 @@ class _$ValidationErrorImpl implements ValidationError {
         serverError,
     TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message, String? errorCode)? conflict,
     TResult? Function(
@@ -1428,6 +2227,9 @@ class _$ValidationErrorImpl implements ValidationError {
         serverError,
     TResult Function(String? message)? networkError,
     TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
     TResult Function(String? message)? notFound,
     TResult Function(String? message, String? errorCode)? conflict,
     TResult Function(
@@ -1451,7 +2253,10 @@ class _$ValidationErrorImpl implements ValidationError {
   TResult map<TResult extends Object?>({
     required TResult Function(ServerError value) serverError,
     required TResult Function(NetworkError value) networkError,
-    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(ConflictError value) conflict,
     required TResult Function(ValidationError value) validationError,
@@ -1468,7 +2273,10 @@ class _$ValidationErrorImpl implements ValidationError {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerError value)? serverError,
     TResult? Function(NetworkError value)? networkError,
-    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(ConflictError value)? conflict,
     TResult? Function(ValidationError value)? validationError,
@@ -1485,7 +2293,10 @@ class _$ValidationErrorImpl implements ValidationError {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerError value)? serverError,
     TResult Function(NetworkError value)? networkError,
-    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(ConflictError value)? conflict,
     TResult Function(ValidationError value)? validationError,
@@ -1597,6 +2408,9 @@ class _$ForbiddenFailureImpl implements ForbiddenFailure {
         serverError,
     required TResult Function(String? message) networkError,
     required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message, String? errorCode) conflict,
     required TResult Function(
@@ -1621,6 +2435,9 @@ class _$ForbiddenFailureImpl implements ForbiddenFailure {
         serverError,
     TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message, String? errorCode)? conflict,
     TResult? Function(
@@ -1644,6 +2461,9 @@ class _$ForbiddenFailureImpl implements ForbiddenFailure {
         serverError,
     TResult Function(String? message)? networkError,
     TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
     TResult Function(String? message)? notFound,
     TResult Function(String? message, String? errorCode)? conflict,
     TResult Function(
@@ -1667,7 +2487,10 @@ class _$ForbiddenFailureImpl implements ForbiddenFailure {
   TResult map<TResult extends Object?>({
     required TResult Function(ServerError value) serverError,
     required TResult Function(NetworkError value) networkError,
-    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(ConflictError value) conflict,
     required TResult Function(ValidationError value) validationError,
@@ -1684,7 +2507,10 @@ class _$ForbiddenFailureImpl implements ForbiddenFailure {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerError value)? serverError,
     TResult? Function(NetworkError value)? networkError,
-    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(ConflictError value)? conflict,
     TResult? Function(ValidationError value)? validationError,
@@ -1701,7 +2527,10 @@ class _$ForbiddenFailureImpl implements ForbiddenFailure {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerError value)? serverError,
     TResult Function(NetworkError value)? networkError,
-    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(ConflictError value)? conflict,
     TResult Function(ValidationError value)? validationError,
@@ -1809,6 +2638,9 @@ class _$LocalCacheErrorImpl implements LocalCacheError {
         serverError,
     required TResult Function(String? message) networkError,
     required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message, String? errorCode) conflict,
     required TResult Function(
@@ -1833,6 +2665,9 @@ class _$LocalCacheErrorImpl implements LocalCacheError {
         serverError,
     TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message, String? errorCode)? conflict,
     TResult? Function(
@@ -1856,6 +2691,9 @@ class _$LocalCacheErrorImpl implements LocalCacheError {
         serverError,
     TResult Function(String? message)? networkError,
     TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
     TResult Function(String? message)? notFound,
     TResult Function(String? message, String? errorCode)? conflict,
     TResult Function(
@@ -1879,7 +2717,10 @@ class _$LocalCacheErrorImpl implements LocalCacheError {
   TResult map<TResult extends Object?>({
     required TResult Function(ServerError value) serverError,
     required TResult Function(NetworkError value) networkError,
-    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(ConflictError value) conflict,
     required TResult Function(ValidationError value) validationError,
@@ -1896,7 +2737,10 @@ class _$LocalCacheErrorImpl implements LocalCacheError {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerError value)? serverError,
     TResult? Function(NetworkError value)? networkError,
-    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(ConflictError value)? conflict,
     TResult? Function(ValidationError value)? validationError,
@@ -1913,7 +2757,10 @@ class _$LocalCacheErrorImpl implements LocalCacheError {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerError value)? serverError,
     TResult Function(NetworkError value)? networkError,
-    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(ConflictError value)? conflict,
     TResult Function(ValidationError value)? validationError,
@@ -2035,6 +2882,9 @@ class _$UnknownErrorImpl implements UnknownError {
         serverError,
     required TResult Function(String? message) networkError,
     required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message, String? errorCode) conflict,
     required TResult Function(
@@ -2059,6 +2909,9 @@ class _$UnknownErrorImpl implements UnknownError {
         serverError,
     TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message, String? errorCode)? conflict,
     TResult? Function(
@@ -2082,6 +2935,9 @@ class _$UnknownErrorImpl implements UnknownError {
         serverError,
     TResult Function(String? message)? networkError,
     TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
     TResult Function(String? message)? notFound,
     TResult Function(String? message, String? errorCode)? conflict,
     TResult Function(
@@ -2105,7 +2961,10 @@ class _$UnknownErrorImpl implements UnknownError {
   TResult map<TResult extends Object?>({
     required TResult Function(ServerError value) serverError,
     required TResult Function(NetworkError value) networkError,
-    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(ConflictError value) conflict,
     required TResult Function(ValidationError value) validationError,
@@ -2122,7 +2981,10 @@ class _$UnknownErrorImpl implements UnknownError {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerError value)? serverError,
     TResult? Function(NetworkError value)? networkError,
-    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(ConflictError value)? conflict,
     TResult? Function(ValidationError value)? validationError,
@@ -2139,7 +3001,10 @@ class _$UnknownErrorImpl implements UnknownError {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerError value)? serverError,
     TResult Function(NetworkError value)? networkError,
-    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(ConflictError value)? conflict,
     TResult Function(ValidationError value)? validationError,
@@ -2272,6 +3137,9 @@ class _$MultiStageErrorImpl implements MultiStageError {
         serverError,
     required TResult Function(String? message) networkError,
     required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpectedError,
+    required TResult Function(String message) customError,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message, String? errorCode) conflict,
     required TResult Function(
@@ -2296,6 +3164,9 @@ class _$MultiStageErrorImpl implements MultiStageError {
         serverError,
     TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpectedError,
+    TResult? Function(String message)? customError,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message, String? errorCode)? conflict,
     TResult? Function(
@@ -2319,6 +3190,9 @@ class _$MultiStageErrorImpl implements MultiStageError {
         serverError,
     TResult Function(String? message)? networkError,
     TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpectedError,
+    TResult Function(String message)? customError,
     TResult Function(String? message)? notFound,
     TResult Function(String? message, String? errorCode)? conflict,
     TResult Function(
@@ -2342,7 +3216,10 @@ class _$MultiStageErrorImpl implements MultiStageError {
   TResult map<TResult extends Object?>({
     required TResult Function(ServerError value) serverError,
     required TResult Function(NetworkError value) networkError,
-    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(Unauthorized value) unauthorized,
+    required TResult Function(CacheError value) cacheError,
+    required TResult Function(UnexpectedError value) unexpectedError,
+    required TResult Function(CustomError value) customError,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(ConflictError value) conflict,
     required TResult Function(ValidationError value) validationError,
@@ -2359,7 +3236,10 @@ class _$MultiStageErrorImpl implements MultiStageError {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServerError value)? serverError,
     TResult? Function(NetworkError value)? networkError,
-    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(Unauthorized value)? unauthorized,
+    TResult? Function(CacheError value)? cacheError,
+    TResult? Function(UnexpectedError value)? unexpectedError,
+    TResult? Function(CustomError value)? customError,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(ConflictError value)? conflict,
     TResult? Function(ValidationError value)? validationError,
@@ -2376,7 +3256,10 @@ class _$MultiStageErrorImpl implements MultiStageError {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServerError value)? serverError,
     TResult Function(NetworkError value)? networkError,
-    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(Unauthorized value)? unauthorized,
+    TResult Function(CacheError value)? cacheError,
+    TResult Function(UnexpectedError value)? unexpectedError,
+    TResult Function(CustomError value)? customError,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(ConflictError value)? conflict,
     TResult Function(ValidationError value)? validationError,

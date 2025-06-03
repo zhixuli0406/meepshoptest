@@ -7,15 +7,16 @@ import 'package:injectable/injectable.dart';
 import 'package:meepshoptest/core/errors/failure.dart';
 import 'package:meepshoptest/core/usecase/usecase.dart';
 import 'package:meepshoptest/features/chat/domain/entities/conversation_entity.dart';
-import 'package:meepshoptest/features/message/domain/entities/message_entity.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_entity.dart';
 import 'package:meepshoptest/features/chat/domain/usecases/get_conversations_usecase.dart';
 import 'package:meepshoptest/core/shared/notifiers/conversation_update_notifier.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_type.dart';
 
 part 'conversation_list_bloc.freezed.dart';
 part 'conversation_list_event.dart';
 part 'conversation_list_state.dart';
 
-@injectable
+@lazySingleton
 class ConversationListBloc
     extends Bloc<ConversationListEvent, ConversationListState> {
   final GetConversationsUsecase _getConversationsUsecase;
@@ -49,6 +50,9 @@ class ConversationListBloc
     LoadConversations event,
     Emitter<ConversationListState> emit,
   ) async {
+    // Prevent concurrent execution if already loading
+    if (state is Loading) return;
+
     print('[ConversationListBloc] _onLoadConversations started.');
     emit(const ConversationListState.loading());
 
@@ -110,6 +114,8 @@ class ConversationListBloc
                 displayMessageContent = newlySentMessage.content;
               } else if (newlySentMessage.type == MessageType.image) {
                 displayMessageContent = '[圖片]';
+              } else if (newlySentMessage.type == MessageType.system) {
+                displayMessageContent = newlySentMessage.content;
               } else {
                 displayMessageContent = '[附件]';
               }
@@ -123,7 +129,20 @@ class ConversationListBloc
 
           final sortedConversations = List<ConversationEntity>.from(
             modifiableConversations,
-          )..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+          )..sort((a, b) {
+            // Sort by timestamp descending, nulls last.
+            if (a.timestamp == null && b.timestamp == null) {
+              return 0; // Both null, considered equal.
+            }
+            if (a.timestamp == null) {
+              return 1; // a is null, b is not; a comes after b (nulls are older/last).
+            }
+            if (b.timestamp == null) {
+              return -1; // b is null, a is not; a comes before b (nulls are older/last).
+            }
+            // Both are non-null, sort normally in descending order.
+            return b.timestamp!.compareTo(a.timestamp!);
+          });
 
           emit(
             ConversationListState.loaded(conversations: sortedConversations),

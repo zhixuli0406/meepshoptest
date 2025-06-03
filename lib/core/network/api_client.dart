@@ -29,12 +29,56 @@ class ApiResponse<T> {
     Map<String, dynamic> json,
     T Function(dynamic json)? dataFromJson,
   ) {
+    T? parsedData;
+    if (json['data'] != null && dataFromJson != null) {
+      try {
+        parsedData = dataFromJson(json['data']);
+        print(
+          '[ApiResponse.fromJson] Parsed data type: ${parsedData.runtimeType}',
+        );
+        if (parsedData is List) {
+          print(
+            '[ApiResponse.fromJson] Parsed data is a List with ${parsedData.length} items.',
+          );
+          for (int i = 0; i < parsedData.length; i++) {
+            var item = parsedData[i];
+            String itemId = 'N/A', itemContent = 'N/A', senderUsername = 'N/A';
+            if (item != null) {
+              try {
+                itemId = (item as dynamic).id?.toString() ?? 'null_id';
+                itemContent =
+                    (item as dynamic).content?.toString() ?? 'null_content';
+                if ((item as dynamic).senderId != null) {
+                  senderUsername =
+                      (item as dynamic).senderId.user?.toString() ??
+                      'null_sender_user';
+                }
+              } catch (e) {
+                // silent catch if properties don't exist or item is not a MessageModel-like structure
+              }
+            }
+            print(
+              '[ApiResponse.fromJson]   Item[$i]: ID: $itemId, Content: "$itemContent", Sender: "$senderUsername"',
+            );
+            if (i >= 4) {
+              // Print first 5 items only to avoid excessive logging
+              print('[ApiResponse.fromJson]   ... (further items omitted)');
+              break;
+            }
+          }
+        }
+      } catch (e, s) {
+        print('[ApiResponse.fromJson] Error during dataFromJson execution: $e');
+        print('[ApiResponse.fromJson] Stack trace: $s');
+        // Potentially rethrow or handle, for now, parsedData will remain null or its last value
+        // If dataFromJson itself throws, parsedData might not be assigned.
+        // Depending on desired behavior, might rethrow e here.
+      }
+    }
+
     return ApiResponse<T>(
       status: json['status'] as String,
-      data:
-          json['data'] != null && dataFromJson != null
-              ? dataFromJson(json['data'])
-              : null,
+      data: parsedData, // Use the parsedData with logging
       message: json['message'] as String?,
       errorCode: json['errorCode'] as String?,
       details: json['details'] as List<dynamic>?,
@@ -118,6 +162,43 @@ class ApiClient {
 
       if (apiResponse.status == 'success') {
         if (apiResponse.data != null) {
+          print(
+            '[ApiClient._request] Returning Right. Data type: ${apiResponse.data.runtimeType}',
+          );
+          if (apiResponse.data is List) {
+            final listData = apiResponse.data as List;
+            print(
+              '[ApiClient._request] Data is a List with ${listData.length} items.',
+            );
+            for (int i = 0; i < listData.length; i++) {
+              var item = listData[i];
+              String itemId = 'N/A',
+                  itemContent = 'N/A',
+                  senderUsername = 'N/A';
+              if (item != null) {
+                try {
+                  itemId = (item as dynamic).id?.toString() ?? 'null_id';
+                  itemContent =
+                      (item as dynamic).content?.toString() ?? 'null_content';
+                  if ((item as dynamic).senderId != null) {
+                    senderUsername =
+                        (item as dynamic).senderId.user?.toString() ??
+                        'null_sender_user';
+                  }
+                } catch (e) {
+                  // silent catch
+                }
+              }
+              print(
+                '[ApiClient._request]   Item[$i]: ID: $itemId, Content: "$itemContent", Sender: "$senderUsername"',
+              );
+              if (i >= 4) {
+                // Print first 5 items only
+                print('[ApiClient._request]   ... (further items omitted)');
+                break;
+              }
+            }
+          }
           return Right(apiResponse.data as T);
         } else {
           return Left(
@@ -192,10 +273,14 @@ class ApiClient {
               'A network error occurred. Please check your connection.',
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      print('[ApiClient._request] Caught generic error: $e');
+      print('[ApiClient._request] Generic error stackTrace: $s');
       return Left(
         Failure.unknownError(
           message: 'An unexpected error occurred: ${e.toString()}',
+          error: e,
+          stackTrace: s,
         ),
       );
     }

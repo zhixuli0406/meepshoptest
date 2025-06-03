@@ -160,6 +160,33 @@ class AuthRepositoryImpl implements AuthRepository {
   Stream<UserEntity?> get user => _userController.stream;
 
   @override
+  Future<Either<Failure, List<UserEntity>>> getUsers() async {
+    try {
+      final token = await _tokenLocalService.getToken();
+      if (token == null || token.isEmpty) {
+        return const Left(
+          Failure.unauthorized(message: 'No token found for getUsers'),
+        );
+      }
+      final List<UserModel> userModels = await _authService.getUsers(token);
+      final List<UserEntity> userEntities =
+          userModels.map((model) => model.toEntity()).toList();
+      return Right(userEntities);
+    } on Failure catch (e) {
+      return Left(e);
+    } catch (e, s) {
+      print("[AuthRepositoryImpl-GetUsers] Error: $e, Stacktrace: $s");
+      return Left(
+        Failure.unknownError(
+          message: 'GetUsers failed in repository: ${e.toString()}',
+          error: e,
+          stackTrace: s,
+        ),
+      );
+    }
+  }
+
+  @override
   Future<Either<Failure, UserEntity>> updateUserProfile({
     String? username,
     String? avatarUrl,

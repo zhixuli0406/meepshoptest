@@ -4,7 +4,7 @@ import 'package:meepshoptest/core/errors/failure.dart';
 import 'package:meepshoptest/features/auth/domain/entities/user_entity.dart';
 import 'package:meepshoptest/features/chat/data/models/message_model.dart';
 import 'package:meepshoptest/features/chat/data/models/sender_model.dart';
-import 'package:meepshoptest/features/message/domain/entities/message_entity.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_entity.dart';
 import 'package:meepshoptest/features/conversation/data/models/conversation_response_model.dart';
 import 'package:meepshoptest/features/conversation/data/models/conversation_input_model.dart';
 import 'package:meepshoptest/features/conversation/data/services/conversation_service.dart';

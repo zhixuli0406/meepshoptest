@@ -134,8 +134,6 @@ abstract class _$$InitializeChatImplCopyWith<$Res> {
       __$$InitializeChatImplCopyWithImpl<$Res>;
   @useResult
   $Res call({ConversationEntity conversation, String currentUserId});
-
-  $ConversationEntityCopyWith<$Res> get conversation;
 }
 
 /// @nodoc
@@ -164,16 +162,6 @@ class __$$InitializeChatImplCopyWithImpl<$Res>
           : currentUserId // ignore: cast_nullable_to_non_nullable
               as String,
     ));
-  }
-
-  /// Create a copy of ChatMessageEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $ConversationEntityCopyWith<$Res> get conversation {
-    return $ConversationEntityCopyWith<$Res>(_value.conversation, (value) {
-      return _then(_value.copyWith(conversation: value));
-    });
   }
 }
 
@@ -1428,18 +1416,19 @@ mixin _$ChatMessageState {
             Map<String, Set<ReactionType>> userSessionReactions, int version)
         loaded,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageSending,
     required TResult Function(
             List<MessageEntity> messages,
             MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions,
+            int version)
         messageSent,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdating,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdated,
     required TResult Function(Failure failure) error,
   }) =>
@@ -1452,16 +1441,16 @@ mixin _$ChatMessageState {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult? Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult? Function(Failure failure)? error,
   }) =>
@@ -1474,16 +1463,16 @@ mixin _$ChatMessageState {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult Function(Failure failure)? error,
     required TResult orElse(),
@@ -1598,18 +1587,19 @@ class _$InitialImpl implements Initial {
             Map<String, Set<ReactionType>> userSessionReactions, int version)
         loaded,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageSending,
     required TResult Function(
             List<MessageEntity> messages,
             MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions,
+            int version)
         messageSent,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdating,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdated,
     required TResult Function(Failure failure) error,
   }) {
@@ -1625,16 +1615,16 @@ class _$InitialImpl implements Initial {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult? Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult? Function(Failure failure)? error,
   }) {
@@ -1650,16 +1640,16 @@ class _$InitialImpl implements Initial {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult Function(Failure failure)? error,
     required TResult orElse(),
@@ -1773,18 +1763,19 @@ class _$LoadingImpl implements Loading {
             Map<String, Set<ReactionType>> userSessionReactions, int version)
         loaded,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageSending,
     required TResult Function(
             List<MessageEntity> messages,
             MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions,
+            int version)
         messageSent,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdating,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdated,
     required TResult Function(Failure failure) error,
   }) {
@@ -1800,16 +1791,16 @@ class _$LoadingImpl implements Loading {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult? Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult? Function(Failure failure)? error,
   }) {
@@ -1825,16 +1816,16 @@ class _$LoadingImpl implements Loading {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult Function(Failure failure)? error,
     required TResult orElse(),
@@ -2019,18 +2010,19 @@ class _$LoadedImpl implements Loaded {
             Map<String, Set<ReactionType>> userSessionReactions, int version)
         loaded,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageSending,
     required TResult Function(
             List<MessageEntity> messages,
             MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions,
+            int version)
         messageSent,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdating,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdated,
     required TResult Function(Failure failure) error,
   }) {
@@ -2046,16 +2038,16 @@ class _$LoadedImpl implements Loaded {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult? Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult? Function(Failure failure)? error,
   }) {
@@ -2071,16 +2063,16 @@ class _$LoadedImpl implements Loaded {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult Function(Failure failure)? error,
     required TResult orElse(),
@@ -2168,7 +2160,8 @@ abstract class _$$MessageSendingImplCopyWith<$Res> {
   @useResult
   $Res call(
       {List<MessageEntity> messages,
-      Map<String, Set<ReactionType>> userSessionReactions});
+      Map<String, Set<ReactionType>> userSessionReactions,
+      int version});
 }
 
 /// @nodoc
@@ -2186,6 +2179,7 @@ class __$$MessageSendingImplCopyWithImpl<$Res>
   $Res call({
     Object? messages = null,
     Object? userSessionReactions = null,
+    Object? version = null,
   }) {
     return _then(_$MessageSendingImpl(
       messages: null == messages
@@ -2196,6 +2190,10 @@ class __$$MessageSendingImplCopyWithImpl<$Res>
           ? _value._userSessionReactions
           : userSessionReactions // ignore: cast_nullable_to_non_nullable
               as Map<String, Set<ReactionType>>,
+      version: null == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -2205,7 +2203,8 @@ class __$$MessageSendingImplCopyWithImpl<$Res>
 class _$MessageSendingImpl implements MessageSending {
   const _$MessageSendingImpl(
       {required final List<MessageEntity> messages,
-      final Map<String, Set<ReactionType>> userSessionReactions = const {}})
+      final Map<String, Set<ReactionType>> userSessionReactions = const {},
+      this.version = 0})
       : _messages = messages,
         _userSessionReactions = userSessionReactions;
 
@@ -2228,8 +2227,12 @@ class _$MessageSendingImpl implements MessageSending {
   }
 
   @override
+  @JsonKey()
+  final int version;
+
+  @override
   String toString() {
-    return 'ChatMessageState.messageSending(messages: $messages, userSessionReactions: $userSessionReactions)';
+    return 'ChatMessageState.messageSending(messages: $messages, userSessionReactions: $userSessionReactions, version: $version)';
   }
 
   @override
@@ -2239,14 +2242,16 @@ class _$MessageSendingImpl implements MessageSending {
             other is _$MessageSendingImpl &&
             const DeepCollectionEquality().equals(other._messages, _messages) &&
             const DeepCollectionEquality()
-                .equals(other._userSessionReactions, _userSessionReactions));
+                .equals(other._userSessionReactions, _userSessionReactions) &&
+            (identical(other.version, version) || other.version == version));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_messages),
-      const DeepCollectionEquality().hash(_userSessionReactions));
+      const DeepCollectionEquality().hash(_userSessionReactions),
+      version);
 
   /// Create a copy of ChatMessageState
   /// with the given fields replaced by the non-null parameter values.
@@ -2266,22 +2271,23 @@ class _$MessageSendingImpl implements MessageSending {
             Map<String, Set<ReactionType>> userSessionReactions, int version)
         loaded,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageSending,
     required TResult Function(
             List<MessageEntity> messages,
             MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions,
+            int version)
         messageSent,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdating,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdated,
     required TResult Function(Failure failure) error,
   }) {
-    return messageSending(messages, userSessionReactions);
+    return messageSending(messages, userSessionReactions, version);
   }
 
   @override
@@ -2293,20 +2299,20 @@ class _$MessageSendingImpl implements MessageSending {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult? Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult? Function(Failure failure)? error,
   }) {
-    return messageSending?.call(messages, userSessionReactions);
+    return messageSending?.call(messages, userSessionReactions, version);
   }
 
   @override
@@ -2318,22 +2324,22 @@ class _$MessageSendingImpl implements MessageSending {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult Function(Failure failure)? error,
     required TResult orElse(),
   }) {
     if (messageSending != null) {
-      return messageSending(messages, userSessionReactions);
+      return messageSending(messages, userSessionReactions, version);
     }
     return orElse();
   }
@@ -2392,12 +2398,13 @@ class _$MessageSendingImpl implements MessageSending {
 
 abstract class MessageSending implements ChatMessageState {
   const factory MessageSending(
-          {required final List<MessageEntity> messages,
-          final Map<String, Set<ReactionType>> userSessionReactions}) =
-      _$MessageSendingImpl;
+      {required final List<MessageEntity> messages,
+      final Map<String, Set<ReactionType>> userSessionReactions,
+      final int version}) = _$MessageSendingImpl;
 
   List<MessageEntity> get messages;
   Map<String, Set<ReactionType>> get userSessionReactions;
+  int get version;
 
   /// Create a copy of ChatMessageState
   /// with the given fields replaced by the non-null parameter values.
@@ -2415,7 +2422,8 @@ abstract class _$$MessageSentImplCopyWith<$Res> {
   $Res call(
       {List<MessageEntity> messages,
       MessageEntity newMessage,
-      Map<String, Set<ReactionType>> userSessionReactions});
+      Map<String, Set<ReactionType>> userSessionReactions,
+      int version});
 
   $MessageEntityCopyWith<$Res> get newMessage;
 }
@@ -2436,6 +2444,7 @@ class __$$MessageSentImplCopyWithImpl<$Res>
     Object? messages = null,
     Object? newMessage = null,
     Object? userSessionReactions = null,
+    Object? version = null,
   }) {
     return _then(_$MessageSentImpl(
       messages: null == messages
@@ -2450,6 +2459,10 @@ class __$$MessageSentImplCopyWithImpl<$Res>
           ? _value._userSessionReactions
           : userSessionReactions // ignore: cast_nullable_to_non_nullable
               as Map<String, Set<ReactionType>>,
+      version: null == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 
@@ -2470,7 +2483,8 @@ class _$MessageSentImpl implements MessageSent {
   const _$MessageSentImpl(
       {required final List<MessageEntity> messages,
       required this.newMessage,
-      final Map<String, Set<ReactionType>> userSessionReactions = const {}})
+      final Map<String, Set<ReactionType>> userSessionReactions = const {},
+      this.version = 0})
       : _messages = messages,
         _userSessionReactions = userSessionReactions;
 
@@ -2495,8 +2509,12 @@ class _$MessageSentImpl implements MessageSent {
   }
 
   @override
+  @JsonKey()
+  final int version;
+
+  @override
   String toString() {
-    return 'ChatMessageState.messageSent(messages: $messages, newMessage: $newMessage, userSessionReactions: $userSessionReactions)';
+    return 'ChatMessageState.messageSent(messages: $messages, newMessage: $newMessage, userSessionReactions: $userSessionReactions, version: $version)';
   }
 
   @override
@@ -2508,7 +2526,8 @@ class _$MessageSentImpl implements MessageSent {
             (identical(other.newMessage, newMessage) ||
                 other.newMessage == newMessage) &&
             const DeepCollectionEquality()
-                .equals(other._userSessionReactions, _userSessionReactions));
+                .equals(other._userSessionReactions, _userSessionReactions) &&
+            (identical(other.version, version) || other.version == version));
   }
 
   @override
@@ -2516,7 +2535,8 @@ class _$MessageSentImpl implements MessageSent {
       runtimeType,
       const DeepCollectionEquality().hash(_messages),
       newMessage,
-      const DeepCollectionEquality().hash(_userSessionReactions));
+      const DeepCollectionEquality().hash(_userSessionReactions),
+      version);
 
   /// Create a copy of ChatMessageState
   /// with the given fields replaced by the non-null parameter values.
@@ -2535,22 +2555,23 @@ class _$MessageSentImpl implements MessageSent {
             Map<String, Set<ReactionType>> userSessionReactions, int version)
         loaded,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageSending,
     required TResult Function(
             List<MessageEntity> messages,
             MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions,
+            int version)
         messageSent,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdating,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdated,
     required TResult Function(Failure failure) error,
   }) {
-    return messageSent(messages, newMessage, userSessionReactions);
+    return messageSent(messages, newMessage, userSessionReactions, version);
   }
 
   @override
@@ -2562,20 +2583,21 @@ class _$MessageSentImpl implements MessageSent {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult? Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult? Function(Failure failure)? error,
   }) {
-    return messageSent?.call(messages, newMessage, userSessionReactions);
+    return messageSent?.call(
+        messages, newMessage, userSessionReactions, version);
   }
 
   @override
@@ -2587,22 +2609,22 @@ class _$MessageSentImpl implements MessageSent {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult Function(Failure failure)? error,
     required TResult orElse(),
   }) {
     if (messageSent != null) {
-      return messageSent(messages, newMessage, userSessionReactions);
+      return messageSent(messages, newMessage, userSessionReactions, version);
     }
     return orElse();
   }
@@ -2661,14 +2683,15 @@ class _$MessageSentImpl implements MessageSent {
 
 abstract class MessageSent implements ChatMessageState {
   const factory MessageSent(
-          {required final List<MessageEntity> messages,
-          required final MessageEntity newMessage,
-          final Map<String, Set<ReactionType>> userSessionReactions}) =
-      _$MessageSentImpl;
+      {required final List<MessageEntity> messages,
+      required final MessageEntity newMessage,
+      final Map<String, Set<ReactionType>> userSessionReactions,
+      final int version}) = _$MessageSentImpl;
 
   List<MessageEntity> get messages;
   MessageEntity get newMessage;
   Map<String, Set<ReactionType>> get userSessionReactions;
+  int get version;
 
   /// Create a copy of ChatMessageState
   /// with the given fields replaced by the non-null parameter values.
@@ -2686,7 +2709,8 @@ abstract class _$$MessageReactionUpdatingImplCopyWith<$Res> {
   @useResult
   $Res call(
       {List<MessageEntity> messages,
-      Map<String, Set<ReactionType>> userSessionReactions});
+      Map<String, Set<ReactionType>> userSessionReactions,
+      int version});
 }
 
 /// @nodoc
@@ -2705,6 +2729,7 @@ class __$$MessageReactionUpdatingImplCopyWithImpl<$Res>
   $Res call({
     Object? messages = null,
     Object? userSessionReactions = null,
+    Object? version = null,
   }) {
     return _then(_$MessageReactionUpdatingImpl(
       messages: null == messages
@@ -2715,6 +2740,10 @@ class __$$MessageReactionUpdatingImplCopyWithImpl<$Res>
           ? _value._userSessionReactions
           : userSessionReactions // ignore: cast_nullable_to_non_nullable
               as Map<String, Set<ReactionType>>,
+      version: null == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -2724,7 +2753,8 @@ class __$$MessageReactionUpdatingImplCopyWithImpl<$Res>
 class _$MessageReactionUpdatingImpl implements MessageReactionUpdating {
   const _$MessageReactionUpdatingImpl(
       {required final List<MessageEntity> messages,
-      final Map<String, Set<ReactionType>> userSessionReactions = const {}})
+      final Map<String, Set<ReactionType>> userSessionReactions = const {},
+      this.version = 0})
       : _messages = messages,
         _userSessionReactions = userSessionReactions;
 
@@ -2747,8 +2777,12 @@ class _$MessageReactionUpdatingImpl implements MessageReactionUpdating {
   }
 
   @override
+  @JsonKey()
+  final int version;
+
+  @override
   String toString() {
-    return 'ChatMessageState.messageReactionUpdating(messages: $messages, userSessionReactions: $userSessionReactions)';
+    return 'ChatMessageState.messageReactionUpdating(messages: $messages, userSessionReactions: $userSessionReactions, version: $version)';
   }
 
   @override
@@ -2758,14 +2792,16 @@ class _$MessageReactionUpdatingImpl implements MessageReactionUpdating {
             other is _$MessageReactionUpdatingImpl &&
             const DeepCollectionEquality().equals(other._messages, _messages) &&
             const DeepCollectionEquality()
-                .equals(other._userSessionReactions, _userSessionReactions));
+                .equals(other._userSessionReactions, _userSessionReactions) &&
+            (identical(other.version, version) || other.version == version));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_messages),
-      const DeepCollectionEquality().hash(_userSessionReactions));
+      const DeepCollectionEquality().hash(_userSessionReactions),
+      version);
 
   /// Create a copy of ChatMessageState
   /// with the given fields replaced by the non-null parameter values.
@@ -2785,22 +2821,23 @@ class _$MessageReactionUpdatingImpl implements MessageReactionUpdating {
             Map<String, Set<ReactionType>> userSessionReactions, int version)
         loaded,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageSending,
     required TResult Function(
             List<MessageEntity> messages,
             MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions,
+            int version)
         messageSent,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdating,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdated,
     required TResult Function(Failure failure) error,
   }) {
-    return messageReactionUpdating(messages, userSessionReactions);
+    return messageReactionUpdating(messages, userSessionReactions, version);
   }
 
   @override
@@ -2812,20 +2849,21 @@ class _$MessageReactionUpdatingImpl implements MessageReactionUpdating {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult? Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult? Function(Failure failure)? error,
   }) {
-    return messageReactionUpdating?.call(messages, userSessionReactions);
+    return messageReactionUpdating?.call(
+        messages, userSessionReactions, version);
   }
 
   @override
@@ -2837,22 +2875,22 @@ class _$MessageReactionUpdatingImpl implements MessageReactionUpdating {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult Function(Failure failure)? error,
     required TResult orElse(),
   }) {
     if (messageReactionUpdating != null) {
-      return messageReactionUpdating(messages, userSessionReactions);
+      return messageReactionUpdating(messages, userSessionReactions, version);
     }
     return orElse();
   }
@@ -2911,12 +2949,13 @@ class _$MessageReactionUpdatingImpl implements MessageReactionUpdating {
 
 abstract class MessageReactionUpdating implements ChatMessageState {
   const factory MessageReactionUpdating(
-          {required final List<MessageEntity> messages,
-          final Map<String, Set<ReactionType>> userSessionReactions}) =
-      _$MessageReactionUpdatingImpl;
+      {required final List<MessageEntity> messages,
+      final Map<String, Set<ReactionType>> userSessionReactions,
+      final int version}) = _$MessageReactionUpdatingImpl;
 
   List<MessageEntity> get messages;
   Map<String, Set<ReactionType>> get userSessionReactions;
+  int get version;
 
   /// Create a copy of ChatMessageState
   /// with the given fields replaced by the non-null parameter values.
@@ -2934,7 +2973,8 @@ abstract class _$$MessageReactionUpdatedImplCopyWith<$Res> {
   @useResult
   $Res call(
       {List<MessageEntity> messages,
-      Map<String, Set<ReactionType>> userSessionReactions});
+      Map<String, Set<ReactionType>> userSessionReactions,
+      int version});
 }
 
 /// @nodoc
@@ -2953,6 +2993,7 @@ class __$$MessageReactionUpdatedImplCopyWithImpl<$Res>
   $Res call({
     Object? messages = null,
     Object? userSessionReactions = null,
+    Object? version = null,
   }) {
     return _then(_$MessageReactionUpdatedImpl(
       messages: null == messages
@@ -2963,6 +3004,10 @@ class __$$MessageReactionUpdatedImplCopyWithImpl<$Res>
           ? _value._userSessionReactions
           : userSessionReactions // ignore: cast_nullable_to_non_nullable
               as Map<String, Set<ReactionType>>,
+      version: null == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -2972,7 +3017,8 @@ class __$$MessageReactionUpdatedImplCopyWithImpl<$Res>
 class _$MessageReactionUpdatedImpl implements MessageReactionUpdated {
   const _$MessageReactionUpdatedImpl(
       {required final List<MessageEntity> messages,
-      final Map<String, Set<ReactionType>> userSessionReactions = const {}})
+      final Map<String, Set<ReactionType>> userSessionReactions = const {},
+      this.version = 0})
       : _messages = messages,
         _userSessionReactions = userSessionReactions;
 
@@ -2995,8 +3041,12 @@ class _$MessageReactionUpdatedImpl implements MessageReactionUpdated {
   }
 
   @override
+  @JsonKey()
+  final int version;
+
+  @override
   String toString() {
-    return 'ChatMessageState.messageReactionUpdated(messages: $messages, userSessionReactions: $userSessionReactions)';
+    return 'ChatMessageState.messageReactionUpdated(messages: $messages, userSessionReactions: $userSessionReactions, version: $version)';
   }
 
   @override
@@ -3006,14 +3056,16 @@ class _$MessageReactionUpdatedImpl implements MessageReactionUpdated {
             other is _$MessageReactionUpdatedImpl &&
             const DeepCollectionEquality().equals(other._messages, _messages) &&
             const DeepCollectionEquality()
-                .equals(other._userSessionReactions, _userSessionReactions));
+                .equals(other._userSessionReactions, _userSessionReactions) &&
+            (identical(other.version, version) || other.version == version));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_messages),
-      const DeepCollectionEquality().hash(_userSessionReactions));
+      const DeepCollectionEquality().hash(_userSessionReactions),
+      version);
 
   /// Create a copy of ChatMessageState
   /// with the given fields replaced by the non-null parameter values.
@@ -3033,22 +3085,23 @@ class _$MessageReactionUpdatedImpl implements MessageReactionUpdated {
             Map<String, Set<ReactionType>> userSessionReactions, int version)
         loaded,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageSending,
     required TResult Function(
             List<MessageEntity> messages,
             MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions,
+            int version)
         messageSent,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdating,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdated,
     required TResult Function(Failure failure) error,
   }) {
-    return messageReactionUpdated(messages, userSessionReactions);
+    return messageReactionUpdated(messages, userSessionReactions, version);
   }
 
   @override
@@ -3060,20 +3113,21 @@ class _$MessageReactionUpdatedImpl implements MessageReactionUpdated {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult? Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult? Function(Failure failure)? error,
   }) {
-    return messageReactionUpdated?.call(messages, userSessionReactions);
+    return messageReactionUpdated?.call(
+        messages, userSessionReactions, version);
   }
 
   @override
@@ -3085,22 +3139,22 @@ class _$MessageReactionUpdatedImpl implements MessageReactionUpdated {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult Function(Failure failure)? error,
     required TResult orElse(),
   }) {
     if (messageReactionUpdated != null) {
-      return messageReactionUpdated(messages, userSessionReactions);
+      return messageReactionUpdated(messages, userSessionReactions, version);
     }
     return orElse();
   }
@@ -3159,12 +3213,13 @@ class _$MessageReactionUpdatedImpl implements MessageReactionUpdated {
 
 abstract class MessageReactionUpdated implements ChatMessageState {
   const factory MessageReactionUpdated(
-          {required final List<MessageEntity> messages,
-          final Map<String, Set<ReactionType>> userSessionReactions}) =
-      _$MessageReactionUpdatedImpl;
+      {required final List<MessageEntity> messages,
+      final Map<String, Set<ReactionType>> userSessionReactions,
+      final int version}) = _$MessageReactionUpdatedImpl;
 
   List<MessageEntity> get messages;
   Map<String, Set<ReactionType>> get userSessionReactions;
+  int get version;
 
   /// Create a copy of ChatMessageState
   /// with the given fields replaced by the non-null parameter values.
@@ -3259,18 +3314,19 @@ class _$ErrorImpl implements Error {
             Map<String, Set<ReactionType>> userSessionReactions, int version)
         loaded,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageSending,
     required TResult Function(
             List<MessageEntity> messages,
             MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions,
+            int version)
         messageSent,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdating,
     required TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)
+            Map<String, Set<ReactionType>> userSessionReactions, int version)
         messageReactionUpdated,
     required TResult Function(Failure failure) error,
   }) {
@@ -3286,16 +3342,16 @@ class _$ErrorImpl implements Error {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult? Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult? Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult? Function(Failure failure)? error,
   }) {
@@ -3311,16 +3367,16 @@ class _$ErrorImpl implements Error {
             Map<String, Set<ReactionType>> userSessionReactions, int version)?
         loaded,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSending,
     TResult Function(List<MessageEntity> messages, MessageEntity newMessage,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageSent,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdating,
     TResult Function(List<MessageEntity> messages,
-            Map<String, Set<ReactionType>> userSessionReactions)?
+            Map<String, Set<ReactionType>> userSessionReactions, int version)?
         messageReactionUpdated,
     TResult Function(Failure failure)? error,
     required TResult orElse(),

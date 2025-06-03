@@ -10,7 +10,7 @@ _$SenderModelImpl _$$SenderModelImplFromJson(Map<String, dynamic> json) =>
     _$SenderModelImpl(
       userId: json['_id'] as String,
       user: json['username'] as String,
-      avatar: json['avatar'] as String,
+      avatar: json['avatar'] as String?,
       legacyUserId: (json['legacyUserId'] as num?)?.toInt(),
     );
 

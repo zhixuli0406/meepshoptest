@@ -5,16 +5,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:meepshoptest/core/errors/failure.dart';
 import 'package:meepshoptest/features/chat/domain/entities/conversation_entity.dart';
-import 'package:meepshoptest/features/message/domain/entities/message_entity.dart';
-import 'package:meepshoptest/features/message/domain/entities/message_sender_entity.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_entity.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_sender_entity.dart';
 import 'package:meepshoptest/features/chat/domain/entities/reaction_type.dart';
 import 'package:meepshoptest/features/chat/domain/entities/reactions_entity.dart';
 import 'package:meepshoptest/features/chat/domain/usecases/create_message_usecase.dart';
 import 'package:meepshoptest/features/chat/domain/usecases/get_messages_usecase.dart';
+import 'package:meepshoptest/features/chat/domain/usecases/update_message_reaction_usecase.dart';
 import 'package:meepshoptest/core/shared/notifiers/conversation_update_notifier.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meepshoptest/core/network/chat_web_socket_service.dart';
 import 'package:meepshoptest/features/chat/data/models/message_model.dart';
+import 'package:meepshoptest/features/chat/data/models/message_input_model.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_type.dart';
 
 part 'chat_message_bloc.freezed.dart';
 
@@ -60,27 +63,32 @@ sealed class ChatMessageState with _$ChatMessageState {
   const factory ChatMessageState.messageSending({
     required List<MessageEntity> messages,
     @Default({}) Map<String, Set<ReactionType>> userSessionReactions,
+    @Default(0) int version,
   }) = MessageSending;
   const factory ChatMessageState.messageSent({
     required List<MessageEntity> messages,
     required MessageEntity newMessage,
     @Default({}) Map<String, Set<ReactionType>> userSessionReactions,
+    @Default(0) int version,
   }) = MessageSent;
   const factory ChatMessageState.messageReactionUpdating({
     required List<MessageEntity> messages,
     @Default({}) Map<String, Set<ReactionType>> userSessionReactions,
+    @Default(0) int version,
   }) = MessageReactionUpdating;
   const factory ChatMessageState.messageReactionUpdated({
     required List<MessageEntity> messages,
     @Default({}) Map<String, Set<ReactionType>> userSessionReactions,
+    @Default(0) int version,
   }) = MessageReactionUpdated;
   const factory ChatMessageState.error({required Failure failure}) = Error;
 }
 
 @injectable
 class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
-  final GetMessagesUsecase _getMessagesUsecase;
-  final CreateMessageUsecase _createMessageUsecase;
+  final GetMessagesUseCase _getMessagesUsecase;
+  final CreateMessageUseCase _createMessageUsecase;
+  final UpdateMessageReactionUseCase _updateMessageReactionUseCase;
   final ConversationUpdateNotifier _conversationUpdateNotifier;
   final ChatWebSocketService _chatWebSocketService;
   StreamSubscription? _webSocketMessagesSubscription;
@@ -93,9 +101,12 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
 
   final Map<String, Set<ReactionType>> _userSessionReactions = {};
 
+  int _messageListVersion = 0;
+
   ChatMessageBloc(
     this._getMessagesUsecase,
     this._createMessageUsecase,
+    this._updateMessageReactionUseCase,
     this._conversationUpdateNotifier,
     this._chatWebSocketService,
   ) : super(const ChatMessageState.initial()) {
@@ -107,10 +118,30 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
     on<_MessageReceivedViaWebSocket>(_onMessageReceivedViaWebSocket);
   }
 
+  int _nextVersion() => ++_messageListVersion;
+
+  List<ReactionDetailEntity> _mapReactionsToEntityList(
+    Map<String, int> reactionMap,
+  ) {
+    return reactionMap.entries.map((entry) {
+      final reactionType = ReactionTypeUtils.fromString(entry.key);
+      return ReactionDetailEntity(type: reactionType, count: entry.value);
+    }).toList();
+  }
+
   Future<void> _onInitializeChat(
     InitializeChat event,
     Emitter<ChatMessageState> emit,
   ) async {
+    print('[ChatMessageBloc] _onInitializeChat called.');
+    print(
+      '[ChatMessageBloc]   Event Conversation ID: ${event.conversation.id}',
+    );
+    print(
+      '[ChatMessageBloc]   Event Conversation Name: "${event.conversation.name}"',
+    );
+    print('[ChatMessageBloc]   Event currentUserId: ${event.currentUserId}');
+
     _currentConversation = event.conversation;
     _currentLoggedInUserId = event.currentUserId;
     _currentConversationId = event.conversation.id;
@@ -191,7 +222,7 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
         Loaded(
           messages: List<MessageEntity>.from(_currentMessages),
           userSessionReactions: Map.from(_userSessionReactions),
-          version: DateTime.now().millisecondsSinceEpoch,
+          version: _nextVersion(),
         ),
       );
     } else {
@@ -215,6 +246,9 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
     LoadMessages event,
     Emitter<ChatMessageState> emit,
   ) async {
+    print('[ChatMessageBloc] _onLoadMessages called.');
+    print('[ChatMessageBloc]   Event Conversation ID: ${event.conversationId}');
+
     if (_currentConversation == null ||
         _currentConversation!.id != event.conversationId) {
       print(
@@ -230,19 +264,35 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
     result.fold(
       (failure) {
         _currentMessages = [];
-        emit(ChatMessageState.error(failure: failure));
+        final errorState = ChatMessageState.error(failure: failure);
+        print(
+          '[ChatMessageBloc] Emitting error state from _onLoadMessages: $errorState',
+        );
+        emit(errorState);
       },
       (messages) {
         _currentMessages = messages;
         _currentMessages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
 
-        emit(
-          Loaded(
-            messages: List<MessageEntity>.from(_currentMessages),
-            userSessionReactions: Map.from(_userSessionReactions),
-            version: DateTime.now().millisecondsSinceEpoch,
-          ),
+        final loadedState = Loaded(
+          messages: List<MessageEntity>.from(_currentMessages),
+          userSessionReactions: Map.from(_userSessionReactions),
+          version: _nextVersion(),
         );
+        print(
+          '[ChatMessageBloc] Emitting loaded state from _onLoadMessages: Found ${messages.length} messages.',
+        );
+        emit(loadedState);
+
+        // Notify ConversationUpdateNotifier with the latest message if available
+        if (_currentMessages.isNotEmpty) {
+          _conversationUpdateNotifier.notify(
+            lastMessage: _currentMessages.last,
+          );
+          print(
+            '[ChatMessageBloc] Notified ConversationUpdateNotifier with last message: ${_currentMessages.last.id} of type ${_currentMessages.last.type}',
+          );
+        }
       },
     );
   }
@@ -253,7 +303,7 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
   ) async {
     if (_currentConversation == null || _currentLoggedInUserId == null) {
       emit(
-        ChatMessageState.error(
+        const ChatMessageState.error(
           failure: Failure.unknownError(message: "Chat not initialized."),
         ),
       );
@@ -264,6 +314,7 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
       ChatMessageState.messageSending(
         messages: List.from(_currentMessages),
         userSessionReactions: Map.from(_userSessionReactions),
+        version: _messageListVersion,
       ),
     );
 
@@ -296,17 +347,18 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
       Loaded(
         messages: List<MessageEntity>.from(_currentMessages),
         userSessionReactions: Map.from(_userSessionReactions),
-        version: DateTime.now().millisecondsSinceEpoch,
+        version: _nextVersion(),
       ),
     );
 
+    final messageInput = MessageInputModel(
+      senderId: event.currentUserId,
+      type: 'text',
+      content: event.messageText,
+    );
     final params = CreateMessageParams(
       conversationId: event.conversationId,
-      messageText: event.messageText,
-      currentUserId: event.currentUserId,
-      senderName: 'Me (Sent via params)',
-      senderAvatar: '',
-      messageType: 'text',
+      messageInput: messageInput,
     );
 
     final result = await _createMessageUsecase(params);
@@ -320,7 +372,7 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
           Loaded(
             messages: List<MessageEntity>.from(_currentMessages),
             userSessionReactions: Map.from(_userSessionReactions),
-            version: DateTime.now().millisecondsSinceEpoch + 1,
+            version: _nextVersion(),
           ),
         );
       },
@@ -335,6 +387,7 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
             messages: List<MessageEntity>.from(_currentMessages),
             newMessage: sentMessage,
             userSessionReactions: Map.from(_userSessionReactions),
+            version: _nextVersion(),
           ),
         );
         _conversationUpdateNotifier.notify(lastMessage: sentMessage);
@@ -348,7 +401,7 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
   ) async {
     if (_currentConversation == null || _currentLoggedInUserId == null) {
       emit(
-        ChatMessageState.error(
+        const ChatMessageState.error(
           failure: Failure.unknownError(message: "Chat not initialized."),
         ),
       );
@@ -359,6 +412,7 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
       ChatMessageState.messageSending(
         messages: List.from(_currentMessages),
         userSessionReactions: Map.from(_userSessionReactions),
+        version: _messageListVersion,
       ),
     );
 
@@ -368,78 +422,44 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
       conversationId: event.conversationId,
       sender: MessageSenderEntity(
         userId: _currentLoggedInUserId!,
-        username: 'Me',
-        avatarUrl: '',
+        username:
+            _currentConversation?.participants
+                .firstWhereOrNull((p) => p.userId == _currentLoggedInUserId)
+                ?.user ??
+            'Me',
+        avatarUrl:
+            _currentConversation?.participants
+                .firstWhereOrNull((p) => p.userId == _currentLoggedInUserId)
+                ?.avatar,
       ),
-      content: 'Uploading: ${event.imagePath.split('/').last}',
+      content: event.imagePath,
       type: MessageType.image,
       timestamp: DateTime.now(),
       reactions: [],
-      imageUrl: event.imagePath,
-      s3Key: null,
     );
+
     _currentMessages.add(optimisticMessage);
     _currentMessages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
     emit(
       Loaded(
         messages: List<MessageEntity>.from(_currentMessages),
         userSessionReactions: Map.from(_userSessionReactions),
-        version: DateTime.now().millisecondsSinceEpoch,
+        version: _nextVersion(),
       ),
     );
 
-    await Future.delayed(const Duration(seconds: 2));
-    String? uploadedImageUrl;
-    if (Random().nextBool()) {
-      uploadedImageUrl =
-          'https://picsum.photos/seed/${Uri.encodeComponent(optimisticId)}/200/300';
-    } else {
-      _currentMessages.removeWhere((m) => m.id == optimisticId);
-      emit(
-        ChatMessageState.error(
-          failure: Failure.unknownError(message: "Image upload failed (mock)"),
-        ),
-      );
-      emit(
-        Loaded(
-          messages: List<MessageEntity>.from(_currentMessages),
-          userSessionReactions: Map.from(_userSessionReactions),
-          version: DateTime.now().millisecondsSinceEpoch + 1,
-        ),
-      );
-      return;
-    }
-
-    if (uploadedImageUrl == null) {
-      _currentMessages.removeWhere((m) => m.id == optimisticId);
-      emit(
-        ChatMessageState.error(
-          failure: Failure.unknownError(
-            message: "Image upload failed, no URL obtained (mock).",
-          ),
-        ),
-      );
-      emit(
-        Loaded(
-          messages: List<MessageEntity>.from(_currentMessages),
-          userSessionReactions: Map.from(_userSessionReactions),
-          version: DateTime.now().millisecondsSinceEpoch + 1,
-        ),
-      );
-      return;
-    }
-
-    final params = CreateMessageParams(
+    final MessageInputModel messageInput = MessageInputModel(
+      senderId: event.currentUserId,
+      type: 'image',
+      content: event.imagePath,
+    );
+    final CreateMessageParams params = CreateMessageParams(
       conversationId: event.conversationId,
-      messageText: uploadedImageUrl,
-      currentUserId: event.currentUserId,
-      senderName: 'Me',
-      senderAvatar: '',
-      messageType: 'image',
+      messageInput: messageInput,
     );
 
     final result = await _createMessageUsecase(params);
-
     _currentMessages.removeWhere((m) => m.id == optimisticId);
 
     result.fold(
@@ -449,7 +469,7 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
           Loaded(
             messages: List<MessageEntity>.from(_currentMessages),
             userSessionReactions: Map.from(_userSessionReactions),
-            version: DateTime.now().millisecondsSinceEpoch + 1,
+            version: _nextVersion(),
           ),
         );
       },
@@ -458,12 +478,12 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
           _currentMessages.add(sentMessage);
           _currentMessages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
         }
-
         emit(
           MessageSent(
             messages: List<MessageEntity>.from(_currentMessages),
             newMessage: sentMessage,
             userSessionReactions: Map.from(_userSessionReactions),
+            version: _nextVersion(),
           ),
         );
         _conversationUpdateNotifier.notify(lastMessage: sentMessage);
@@ -475,91 +495,106 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
     AddReaction event,
     Emitter<ChatMessageState> emit,
   ) async {
-    if (_currentConversation == null || _currentLoggedInUserId == null) {
-      emit(
-        ChatMessageState.error(
-          failure: Failure.unknownError(message: "Chat not initialized."),
-        ),
-      );
-      return;
-    }
+    if (event.messageId == null) return;
 
-    if (event.messageId == null) {
-      print("[ChatMessageBloc] AddReaction event has null messageId.");
-      return;
-    }
     final messageId = event.messageId!;
+    final reactionType = event.reactionType;
 
-    final messageIndex = _currentMessages.indexWhere((m) => m.id == messageId);
+    // Optimistic UI update for user session tracking
+    final currentReactionsForMessage = _userSessionReactions[messageId] ?? {};
+    bool alreadyReactedWithThisType = currentReactionsForMessage.contains(
+      reactionType,
+    );
 
-    if (messageIndex == -1) {
-      print(
-        "[ChatMessageBloc] Message with ID $messageId not found for reaction.",
-      );
-      return;
+    String action;
+    if (alreadyReactedWithThisType) {
+      currentReactionsForMessage.remove(reactionType);
+      action = 'decrement';
+    } else {
+      currentReactionsForMessage.add(reactionType);
+      action = 'increment';
     }
+    _userSessionReactions[messageId] = currentReactionsForMessage;
 
+    // Emit updating state for immediate UI feedback if desired
+    // For simplicity, we can skip MessageReactionUpdating and go to API call directly
+    // or emit it if we want a specific loading indicator for reactions.
     emit(
-      ChatMessageState.messageReactionUpdating(
-        messages: List<MessageEntity>.from(_currentMessages),
+      MessageReactionUpdating(
+        messages: List.from(_currentMessages),
         userSessionReactions: Map.from(_userSessionReactions),
+        version: _nextVersion(),
       ),
     );
 
-    final messageToUpdate = _currentMessages[messageIndex];
-
-    List<ReactionDetailEntity> modifiableReactions = List.from(
-      messageToUpdate.reactions ?? [],
+    final params = UpdateMessageReactionParams(
+      messageId: messageId,
+      reactionType:
+          reactionType
+              .name, // Assuming ReactionType enum has a .name getter for the string value
+      action: action,
     );
 
-    int existingReactionEntityIndex = modifiableReactions.indexWhere(
-      (r) => r.type == event.reactionType,
-    );
+    final result = await _updateMessageReactionUseCase(params);
 
-    _userSessionReactions.putIfAbsent(messageId, () => <ReactionType>{});
-    bool currentUserHadReactedWithThisType = _userSessionReactions[messageId]!
-        .contains(event.reactionType);
+    result.fold(
+      (failure) {
+        // Revert optimistic update on failure
+        final revertedReactions = _userSessionReactions[messageId] ?? {};
+        if (action == 'increment') {
+          // Was an add, so remove it
+          revertedReactions.remove(reactionType);
+        } else {
+          // Was a remove, so add it back
+          revertedReactions.add(reactionType);
+        }
+        _userSessionReactions[messageId] = revertedReactions;
 
-    if (currentUserHadReactedWithThisType) {
-      _userSessionReactions[messageId]!.remove(event.reactionType);
-      if (existingReactionEntityIndex != -1) {
-        ReactionDetailEntity entity =
-            modifiableReactions[existingReactionEntityIndex];
-        if (entity.count > 1) {
-          modifiableReactions[existingReactionEntityIndex] = entity.copyWith(
-            count: entity.count - 1,
+        emit(Error(failure: failure));
+        // Optionally emit a Loaded or MessageReactionUpdated state with the reverted optimistic UI
+        // to ensure UI consistency if Error state doesn't rebuild the list with userSessionReactions.
+        emit(
+          MessageReactionUpdated(
+            messages: List.from(_currentMessages), // original messages
+            userSessionReactions: Map.from(
+              _userSessionReactions,
+            ), // reverted session reactions
+            version: _nextVersion(),
+          ),
+        );
+      },
+      (reactionUpdateResponse) {
+        // API call was successful, update the _currentMessages list
+        final messageIndex = _currentMessages.indexWhere(
+          (m) => m.id == reactionUpdateResponse.messageId,
+        );
+        if (messageIndex != -1) {
+          final originalMessage = _currentMessages[messageIndex];
+          final updatedReactionsList = _mapReactionsToEntityList(
+            reactionUpdateResponse.reactions,
+          );
+
+          _currentMessages[messageIndex] = originalMessage.copyWith(
+            reactions: updatedReactionsList,
+          );
+
+          emit(
+            MessageReactionUpdated(
+              messages: List.from(_currentMessages),
+              userSessionReactions: Map.from(
+                _userSessionReactions,
+              ), // Session reactions are already updated optimistically
+              version: _nextVersion(),
+            ),
           );
         } else {
-          modifiableReactions.removeAt(existingReactionEntityIndex);
+          // Message not found, this shouldn't happen if messageId is valid
+          // Potentially emit an error or log
+          print(
+            '[ChatMessageBloc] _onAddReaction: Message with ID ${reactionUpdateResponse.messageId} not found after reaction update.',
+          );
         }
-      }
-    } else {
-      _userSessionReactions[messageId]!.add(event.reactionType);
-      if (existingReactionEntityIndex != -1) {
-        ReactionDetailEntity entity =
-            modifiableReactions[existingReactionEntityIndex];
-        modifiableReactions[existingReactionEntityIndex] = entity.copyWith(
-          count: entity.count + 1,
-        );
-      } else {
-        modifiableReactions.add(
-          ReactionDetailEntity(type: event.reactionType, count: 1),
-        );
-      }
-    }
-
-    modifiableReactions.sort((a, b) => a.type.index.compareTo(b.type.index));
-    modifiableReactions.removeWhere((r) => r.count <= 0);
-
-    _currentMessages[messageIndex] = messageToUpdate.copyWith(
-      reactions: modifiableReactions.isEmpty ? null : modifiableReactions,
-    );
-
-    emit(
-      ChatMessageState.messageReactionUpdated(
-        messages: List<MessageEntity>.from(_currentMessages),
-        userSessionReactions: Map.from(_userSessionReactions),
-      ),
+      },
     );
   }
 }

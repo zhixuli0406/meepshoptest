@@ -6,6 +6,8 @@ part 'participant_model.g.dart';
 
 @freezed
 class ParticipantModel with _$ParticipantModel {
+  const ParticipantModel._();
+
   const factory ParticipantModel({
     @JsonKey(name: '_id') String? userId,
     @JsonKey(name: 'username') String? user,
@@ -14,14 +16,12 @@ class ParticipantModel with _$ParticipantModel {
 
   factory ParticipantModel.fromJson(Map<String, dynamic> json) =>
       _$ParticipantModelFromJson(json);
-}
 
-extension ParticipantModelX on ParticipantModel {
   ParticipantEntity toEntity() {
     return ParticipantEntity(
-      userId: userId ?? '',
-      user: user ?? 'Unknown User',
-      avatar: avatar ?? '',
+      userId: userId ?? 'unknown_user_id',
+      user: user,
+      avatar: avatar,
     );
   }
 }

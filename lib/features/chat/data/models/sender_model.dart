@@ -8,7 +8,7 @@ class SenderModel with _$SenderModel {
   const factory SenderModel({
     @JsonKey(name: '_id') required String userId,
     @JsonKey(name: 'username') required String user,
-    required String avatar,
+    String? avatar,
     int? legacyUserId,
   }) = _SenderModel;
 

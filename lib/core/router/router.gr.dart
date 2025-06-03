@@ -33,6 +33,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ConversationListPage(),
       );
     },
+    CreateConversationRoute.name: (routeData) {
+      final args = routeData.argsAs<CreateConversationRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CreateConversationPage(
+          key: args.key,
+          currentUserId: args.currentUserId,
+        ),
+      );
+    },
     FullScreenImageViewerRoute.name: (routeData) {
       final args = routeData.argsAs<FullScreenImageViewerRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -119,6 +129,45 @@ class ConversationListRoute extends PageRouteInfo<void> {
   static const String name = 'ConversationListRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CreateConversationPage]
+class CreateConversationRoute
+    extends PageRouteInfo<CreateConversationRouteArgs> {
+  CreateConversationRoute({
+    Key? key,
+    required String currentUserId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CreateConversationRoute.name,
+          args: CreateConversationRouteArgs(
+            key: key,
+            currentUserId: currentUserId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CreateConversationRoute';
+
+  static const PageInfo<CreateConversationRouteArgs> page =
+      PageInfo<CreateConversationRouteArgs>(name);
+}
+
+class CreateConversationRouteArgs {
+  const CreateConversationRouteArgs({
+    this.key,
+    required this.currentUserId,
+  });
+
+  final Key? key;
+
+  final String currentUserId;
+
+  @override
+  String toString() {
+    return 'CreateConversationRouteArgs{key: $key, currentUserId: $currentUserId}';
+  }
 }
 
 /// generated route for

@@ -24,7 +24,7 @@ mixin _$SenderModel {
   String get userId => throw _privateConstructorUsedError;
   @JsonKey(name: 'username')
   String get user => throw _privateConstructorUsedError;
-  String get avatar => throw _privateConstructorUsedError;
+  String? get avatar => throw _privateConstructorUsedError;
   int? get legacyUserId => throw _privateConstructorUsedError;
 
   /// Serializes this SenderModel to a JSON map.
@@ -46,7 +46,7 @@ abstract class $SenderModelCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: '_id') String userId,
       @JsonKey(name: 'username') String user,
-      String avatar,
+      String? avatar,
       int? legacyUserId});
 }
 
@@ -67,7 +67,7 @@ class _$SenderModelCopyWithImpl<$Res, $Val extends SenderModel>
   $Res call({
     Object? userId = null,
     Object? user = null,
-    Object? avatar = null,
+    Object? avatar = freezed,
     Object? legacyUserId = freezed,
   }) {
     return _then(_value.copyWith(
@@ -79,10 +79,10 @@ class _$SenderModelCopyWithImpl<$Res, $Val extends SenderModel>
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
               as String,
-      avatar: null == avatar
+      avatar: freezed == avatar
           ? _value.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       legacyUserId: freezed == legacyUserId
           ? _value.legacyUserId
           : legacyUserId // ignore: cast_nullable_to_non_nullable
@@ -102,7 +102,7 @@ abstract class _$$SenderModelImplCopyWith<$Res>
   $Res call(
       {@JsonKey(name: '_id') String userId,
       @JsonKey(name: 'username') String user,
-      String avatar,
+      String? avatar,
       int? legacyUserId});
 }
 
@@ -121,7 +121,7 @@ class __$$SenderModelImplCopyWithImpl<$Res>
   $Res call({
     Object? userId = null,
     Object? user = null,
-    Object? avatar = null,
+    Object? avatar = freezed,
     Object? legacyUserId = freezed,
   }) {
     return _then(_$SenderModelImpl(
@@ -133,10 +133,10 @@ class __$$SenderModelImplCopyWithImpl<$Res>
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
               as String,
-      avatar: null == avatar
+      avatar: freezed == avatar
           ? _value.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       legacyUserId: freezed == legacyUserId
           ? _value.legacyUserId
           : legacyUserId // ignore: cast_nullable_to_non_nullable
@@ -151,7 +151,7 @@ class _$SenderModelImpl implements _SenderModel {
   const _$SenderModelImpl(
       {@JsonKey(name: '_id') required this.userId,
       @JsonKey(name: 'username') required this.user,
-      required this.avatar,
+      this.avatar,
       this.legacyUserId});
 
   factory _$SenderModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -164,7 +164,7 @@ class _$SenderModelImpl implements _SenderModel {
   @JsonKey(name: 'username')
   final String user;
   @override
-  final String avatar;
+  final String? avatar;
   @override
   final int? legacyUserId;
 
@@ -210,7 +210,7 @@ abstract class _SenderModel implements SenderModel {
   const factory _SenderModel(
       {@JsonKey(name: '_id') required final String userId,
       @JsonKey(name: 'username') required final String user,
-      required final String avatar,
+      final String? avatar,
       final int? legacyUserId}) = _$SenderModelImpl;
 
   factory _SenderModel.fromJson(Map<String, dynamic> json) =
@@ -223,7 +223,7 @@ abstract class _SenderModel implements SenderModel {
   @JsonKey(name: 'username')
   String get user;
   @override
-  String get avatar;
+  String? get avatar;
   @override
   int? get legacyUserId;
 

@@ -1,12 +1,12 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
 
-part 'participant_entity.freezed.dart';
+class ParticipantEntity extends Equatable {
+  final String userId;
+  final String? user; // Username or display name
+  final String? avatar; // Avatar URL
 
-@freezed
-class ParticipantEntity with _$ParticipantEntity {
-  const factory ParticipantEntity({
-    required String userId,
-    required String user,
-    required String avatar,
-  }) = _ParticipantEntity;
+  const ParticipantEntity({required this.userId, this.user, this.avatar});
+
+  @override
+  List<Object?> get props => [userId, user, avatar];
 }

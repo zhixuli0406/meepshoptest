@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart'; // Changed to standard gap import
 import 'package:meepshoptest/core/router/router.dart';
+import 'package:meepshoptest/core/errors/failure.dart'; // Added import for Failure
 import 'package:meepshoptest/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:meepshoptest/features/auth/presentation/blocs/auth_event.dart';
 import 'package:meepshoptest/features/auth/presentation/blocs/auth_state.dart';
@@ -46,31 +47,26 @@ class _LoginPageState extends State<LoginPage> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthFailure) {
+            final String errorMessage = switch (state.failure) {
+              ServerError(message: final msg) => msg ?? 'Server Error',
+              NetworkError(message: final msg) => msg ?? 'Network Error',
+              Unauthorized(message: final msg) => msg ?? 'Unauthorized',
+              CacheError(message: final msg) => msg ?? 'Cache Error',
+              UnexpectedError(message: final msg) => msg ?? 'Unexpected Error',
+              CustomError(message: final msg) =>
+                msg, // CustomError message is required
+              NotFoundFailure(message: final msg) => msg ?? 'Not Found',
+              ConflictError(message: final msg) => msg ?? 'Conflict',
+              ValidationError(message: final msg) => msg ?? 'Validation Error',
+              ForbiddenFailure(message: final msg) => msg ?? 'Forbidden',
+              LocalCacheError(message: final msg) => msg ?? 'Local Cache Error',
+              UnknownError(message: final msg) =>
+                msg ?? 'An unknown error occurred',
+              MultiStageError(message: final msg) => msg ?? 'Multi-stage error',
+            };
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  state.failure.when(
-                    serverError:
-                        (message, errorCode, details, statusCode) =>
-                            message ?? 'Server Error',
-                    networkError: (message) => message ?? 'Network Error',
-                    unauthorized: (message) => message ?? 'Unauthorized',
-                    notFound: (message) => message ?? 'Not Found',
-                    conflict: (message, errorCode) => message ?? 'Conflict',
-                    validationError:
-                        (message, errorCode, details) =>
-                            message ?? 'Validation Error',
-                    forbidden: (message) => message ?? 'Forbidden',
-                    localCacheError:
-                        (message) => message ?? 'Local Cache Error',
-                    unknownError:
-                        (message, error, stackTrace) =>
-                            message ?? 'An unknown error occurred',
-                    multiStageError:
-                        (message, originalFailure) =>
-                            message ?? 'Multi-stage error',
-                  ),
-                ),
+                content: Text(errorMessage),
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );

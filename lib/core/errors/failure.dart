@@ -13,7 +13,10 @@ sealed class Failure with _$Failure {
   }) = ServerError;
 
   const factory Failure.networkError({String? message}) = NetworkError;
-  const factory Failure.unauthorized({String? message}) = UnauthorizedFailure;
+  const factory Failure.unauthorized({String? message}) = Unauthorized;
+  const factory Failure.cacheError({String? message}) = CacheError;
+  const factory Failure.unexpectedError({String? message}) = UnexpectedError;
+  const factory Failure.customError({required String message}) = CustomError;
   const factory Failure.notFound({String? message}) = NotFoundFailure;
   const factory Failure.conflict({String? message, String? errorCode}) =
       ConflictError;

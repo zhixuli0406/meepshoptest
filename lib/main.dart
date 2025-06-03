@@ -11,6 +11,7 @@ import 'package:meepshoptest/features/auth/presentation/blocs/auth_state.dart';
 import 'package:meepshoptest/injectable.dart';
 
 final appRouter = AppRouter();
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,7 +61,7 @@ class MyApp extends StatelessWidget {
                     darkTheme: AppTheme.darkTheme,
                     themeMode: themeState.themeMode,
                     routerConfig: appRouter.config(
-                      navigatorObservers: () => [MyNavigatorObserver()],
+                      navigatorObservers: () => [routeObserver],
                     ),
                     debugShowCheckedModeBanner: false,
                   );
@@ -73,5 +74,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-class MyNavigatorObserver extends NavigatorObserver {}

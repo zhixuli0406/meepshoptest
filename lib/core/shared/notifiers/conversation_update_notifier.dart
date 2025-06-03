@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:meepshoptest/features/message/domain/entities/message_entity.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_entity.dart';
 
 @lazySingleton
 class ConversationUpdateNotifier extends ValueNotifier<MessageEntity?> {
