@@ -2,8 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:meepshoptest/features/conversation/data/models/conversation_participant_api_model.dart';
 // import 'package:meepshoptest/features/message/data/models/message_api_model.dart'; // Keep for X.toEntity if needed
 import 'package:meepshoptest/features/conversation/domain/entities/conversation_entity.dart';
-import 'package:meepshoptest/features/conversation/domain/entities/conversation_participant_entity.dart';
-import 'package:meepshoptest/features/chat/domain/entities/message_entity.dart';
 import 'package:meepshoptest/features/chat/data/models/message_api_model.dart'; // Import for MessageApiModel.fromJson
 
 part 'conversation_api_model.freezed.dart';

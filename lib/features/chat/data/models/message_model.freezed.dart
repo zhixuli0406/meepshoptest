@@ -27,6 +27,9 @@ mixin _$MessageModel {
   SenderModel? get sender => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  @JsonKey(name: 's3_key')
+  String? get s3Key => throw _privateConstructorUsedError;
+  String? get imageUrl => throw _privateConstructorUsedError;
   Map<String, int>? get reactions => throw _privateConstructorUsedError;
   @JsonKey(name: 'createdAt')
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -57,6 +60,8 @@ abstract class $MessageModelCopyWith<$Res> {
       @JsonKey(name: 'senderId') SenderModel? sender,
       String type,
       String content,
+      @JsonKey(name: 's3_key') String? s3Key,
+      String? imageUrl,
       Map<String, int>? reactions,
       @JsonKey(name: 'createdAt') DateTime createdAt,
       @JsonKey(name: 'updatedAt') DateTime? updatedAt,
@@ -86,6 +91,8 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
     Object? sender = freezed,
     Object? type = null,
     Object? content = null,
+    Object? s3Key = freezed,
+    Object? imageUrl = freezed,
     Object? reactions = freezed,
     Object? createdAt = null,
     Object? updatedAt = freezed,
@@ -113,6 +120,14 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
+      s3Key: freezed == s3Key
+          ? _value.s3Key
+          : s3Key // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imageUrl: freezed == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       reactions: freezed == reactions
           ? _value.reactions
           : reactions // ignore: cast_nullable_to_non_nullable
@@ -165,6 +180,8 @@ abstract class _$$MessageModelImplCopyWith<$Res>
       @JsonKey(name: 'senderId') SenderModel? sender,
       String type,
       String content,
+      @JsonKey(name: 's3_key') String? s3Key,
+      String? imageUrl,
       Map<String, int>? reactions,
       @JsonKey(name: 'createdAt') DateTime createdAt,
       @JsonKey(name: 'updatedAt') DateTime? updatedAt,
@@ -193,6 +210,8 @@ class __$$MessageModelImplCopyWithImpl<$Res>
     Object? sender = freezed,
     Object? type = null,
     Object? content = null,
+    Object? s3Key = freezed,
+    Object? imageUrl = freezed,
     Object? reactions = freezed,
     Object? createdAt = null,
     Object? updatedAt = freezed,
@@ -220,6 +239,14 @@ class __$$MessageModelImplCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
+      s3Key: freezed == s3Key
+          ? _value.s3Key
+          : s3Key // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imageUrl: freezed == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       reactions: freezed == reactions
           ? _value._reactions
           : reactions // ignore: cast_nullable_to_non_nullable
@@ -253,6 +280,8 @@ class _$MessageModelImpl implements _MessageModel {
       @JsonKey(name: 'senderId') this.sender,
       required this.type,
       required this.content,
+      @JsonKey(name: 's3_key') this.s3Key,
+      this.imageUrl,
       final Map<String, int>? reactions,
       @JsonKey(name: 'createdAt') required this.createdAt,
       @JsonKey(name: 'updatedAt') this.updatedAt,
@@ -275,6 +304,11 @@ class _$MessageModelImpl implements _MessageModel {
   final String type;
   @override
   final String content;
+  @override
+  @JsonKey(name: 's3_key')
+  final String? s3Key;
+  @override
+  final String? imageUrl;
   final Map<String, int>? _reactions;
   @override
   Map<String, int>? get reactions {
@@ -298,7 +332,7 @@ class _$MessageModelImpl implements _MessageModel {
 
   @override
   String toString() {
-    return 'MessageModel(id: $id, conversationId: $conversationId, sender: $sender, type: $type, content: $content, reactions: $reactions, createdAt: $createdAt, updatedAt: $updatedAt, legacyConvId: $legacyConvId, legacySenderId: $legacySenderId)';
+    return 'MessageModel(id: $id, conversationId: $conversationId, sender: $sender, type: $type, content: $content, s3Key: $s3Key, imageUrl: $imageUrl, reactions: $reactions, createdAt: $createdAt, updatedAt: $updatedAt, legacyConvId: $legacyConvId, legacySenderId: $legacySenderId)';
   }
 
   @override
@@ -312,6 +346,9 @@ class _$MessageModelImpl implements _MessageModel {
             (identical(other.sender, sender) || other.sender == sender) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.content, content) || other.content == content) &&
+            (identical(other.s3Key, s3Key) || other.s3Key == s3Key) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
             const DeepCollectionEquality()
                 .equals(other._reactions, _reactions) &&
             (identical(other.createdAt, createdAt) ||
@@ -333,6 +370,8 @@ class _$MessageModelImpl implements _MessageModel {
       sender,
       type,
       content,
+      s3Key,
+      imageUrl,
       const DeepCollectionEquality().hash(_reactions),
       createdAt,
       updatedAt,
@@ -362,6 +401,8 @@ abstract class _MessageModel implements MessageModel {
       @JsonKey(name: 'senderId') final SenderModel? sender,
       required final String type,
       required final String content,
+      @JsonKey(name: 's3_key') final String? s3Key,
+      final String? imageUrl,
       final Map<String, int>? reactions,
       @JsonKey(name: 'createdAt') required final DateTime createdAt,
       @JsonKey(name: 'updatedAt') final DateTime? updatedAt,
@@ -383,6 +424,11 @@ abstract class _MessageModel implements MessageModel {
   String get type;
   @override
   String get content;
+  @override
+  @JsonKey(name: 's3_key')
+  String? get s3Key;
+  @override
+  String? get imageUrl;
   @override
   Map<String, int>? get reactions;
   @override

@@ -18,9 +18,9 @@ class UploadService {
       '[UploadService-GetPresignedUrl] Requesting presigned URL for fileName: $fileName, fileType: $fileType',
     );
     try {
-      final result = await _apiClient.get<PresignedUrlResponseModel>(
-        '/upload/presigned-url',
-        queryParameters: {'fileName': fileName, 'fileType': fileType},
+      final result = await _apiClient.post<PresignedUrlResponseModel>(
+        '/uploads/generate-presigned-url',
+        data: {'fileName': fileName, 'fileType': fileType},
         dataFromJson:
             (json) => PresignedUrlResponseModel.fromJson(
               json as Map<String, dynamic>,
@@ -33,11 +33,12 @@ class UploadService {
             '[UploadService-GetPresignedUrl] Error from ApiClient: ${failure.toString()}',
           );
           if (failure is ServerError) throw failure;
-          if (failure is NetworkError)
+          if (failure is NetworkError) {
             throw Failure.networkError(
               message:
                   failure.message ?? "Network error during presigned URL fetch",
             );
+          }
           throw Failure.serverError(
             message: 'Failed to get presigned URL: ${failure.toString()}',
           );

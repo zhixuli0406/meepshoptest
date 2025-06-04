@@ -1,8 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:meepshoptest/core/errors/failure.dart';
-import 'package:meepshoptest/features/chat/data/models/conversation_model.dart';
 import 'package:meepshoptest/features/chat/data/models/message_input_model.dart';
-import 'package:meepshoptest/features/chat/data/models/message_model.dart';
 import 'package:meepshoptest/features/chat/data/services/chat_data_source_service.dart';
 import 'package:meepshoptest/features/chat/domain/entities/conversation_entity.dart';
 import 'package:meepshoptest/features/chat/domain/entities/message_entity.dart';

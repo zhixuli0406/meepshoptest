@@ -153,10 +153,9 @@ class _ConversationListPageState extends State<ConversationListPage>
                         String displayTitle;
 
                         // 決定 displayTitle 的邏輯
-                        if (conversation.name != null &&
-                            conversation.name!.isNotEmpty &&
+                        if (conversation.name.isNotEmpty &&
                             conversation.name != "Unknown Conversation") {
-                          displayTitle = conversation.name!;
+                          displayTitle = conversation.name;
                         } else {
                           // 如果 conversation.name 為空、為 "Unknown Conversation"，或 null，則顯示所有參與者的名字
                           final allParticipantNames =
@@ -186,129 +185,26 @@ class _ConversationListPageState extends State<ConversationListPage>
                         }
 
                         // Participant avatars and names logic
-                        List<String> participantAvatars =
+                        List<String> participantAvatarsSource =
                             conversation.participants
                                 .map((p) => p.avatar ?? "")
                                 .toList();
 
                         Widget leadingWidget;
-                        if (participantAvatars.isEmpty ||
-                            participantAvatars.every((av) => av.isEmpty)) {
-                          leadingWidget = CircleAvatar(
-                            backgroundColor:
-                                Theme.of(
-                                  context,
-                                ).colorScheme.secondaryContainer,
-                            foregroundColor:
-                                Theme.of(
-                                  context,
-                                ).colorScheme.onSecondaryContainer,
-                            child: const Icon(Icons.group_outlined),
-                          );
-                        } else if (participantAvatars.length == 1 ||
-                            (participantAvatars.length > 1 &&
-                                participantAvatars
-                                        .where((av) => av.isNotEmpty)
-                                        .length <=
-                                    1 &&
-                                currentUserIdForLogic !=
-                                    null && // Use currentUserIdForLogic
-                                conversation.participants.length == 2)) {
-                          String avatarUrl = "";
-                          String initialLetter = "?";
 
-                          ParticipantEntity? displayParticipant;
-                          if (currentUserIdForLogic !=
-                                  null && // Use currentUserIdForLogic
-                              conversation.participants.length == 2) {
-                            displayParticipant = conversation.participants
-                                .firstWhere(
-                                  (p) =>
-                                      p.userId !=
-                                      currentUserIdForLogic, // Use currentUserIdForLogic
-                                  orElse: () => conversation.participants.first,
-                                );
-                          } else {
-                            displayParticipant = conversation.participants
-                                .firstWhere(
-                                  (p) => p.avatar?.isNotEmpty ?? false,
-                                  orElse: () => conversation.participants.first,
-                                );
-                          }
+                        // Determine the number of participants with actual avatar URLs
+                        final numActualAvatars =
+                            conversation.participants
+                                .where((p) => p.avatar?.isNotEmpty ?? false)
+                                .length;
+                        final totalInConv = conversation.participants.length;
 
-                          avatarUrl = displayParticipant.avatar ?? "";
-                          initialLetter =
-                              (displayParticipant.user?.isNotEmpty ?? false)
-                                  ? displayParticipant.user![0].toUpperCase()
-                                  : "U";
-
-                          // Log the avatarUrl before attempting to load it
-                          print(
-                            '[ConversationListPage] PRE-CHECK avatar. Participant: "${displayParticipant.user}", URL: "$avatarUrl", Length: ${avatarUrl.length}, CharCodes: ${avatarUrl.codeUnits}',
-                          );
-
-                          if (avatarUrl.isNotEmpty) {
-                            leadingWidget = CircleAvatar(
-                              backgroundColor:
-                                  Theme.of(
-                                    context,
-                                  ).colorScheme.secondaryContainer,
-                              foregroundColor:
-                                  Theme.of(
-                                    context,
-                                  ).colorScheme.onSecondaryContainer,
-                              child: ClipOval(
-                                child: Image.network(
-                                  avatarUrl,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  loadingBuilder: (
-                                    BuildContext context,
-                                    Widget child,
-                                    ImageChunkEvent? loadingProgress,
-                                  ) {
-                                    if (loadingProgress == null) return child;
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2.0,
-                                        value:
-                                            loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                                : null,
-                                      ),
-                                    );
-                                  },
-                                  errorBuilder: (
-                                    BuildContext context,
-                                    Object exception,
-                                    StackTrace? stackTrace,
-                                  ) {
-                                    print(
-                                      '[ConversationListPage] ERROR loading avatar. Participant: "${displayParticipant?.user}", URL: "$avatarUrl", Length: ${avatarUrl.length}, CharCodes: ${avatarUrl.codeUnits}, Exception: $exception',
-                                    );
-                                    return Center(
-                                      child: Text(
-                                        initialLetter,
-                                        style: TextStyle(
-                                          color:
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .onSecondaryContainer,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                          } else {
-                            leadingWidget = CircleAvatar(
+                        if (numActualAvatars == 0) {
+                          // Case 1: No participant has an avatar
+                          leadingWidget = SizedBox(
+                            width: 56.w,
+                            height: 40.h,
+                            child: CircleAvatar(
                               backgroundColor:
                                   Theme.of(
                                     context,
@@ -318,111 +214,248 @@ class _ConversationListPageState extends State<ConversationListPage>
                                     context,
                                   ).colorScheme.onSecondaryContainer,
                               child: const Icon(Icons.group_outlined),
+                            ),
+                          );
+                        } else if (totalInConv == 1 ||
+                            (totalInConv > 1 && numActualAvatars == 1)) {
+                          // Case 2: Single participant in conversation, OR multiple participants but only one has an avatar.
+                          // Display a single avatar.
+                          String avatarUrl = "";
+                          String initialLetter = "?";
+
+                          ParticipantEntity displayParticipant = conversation
+                              .participants
+                              .firstWhere(
+                                (p) => p.avatar?.isNotEmpty ?? false,
+                                orElse:
+                                    () =>
+                                        conversation
+                                            .participants
+                                            .first, // Fallback to the first participant
+                              );
+
+                          avatarUrl = displayParticipant.avatar ?? "";
+                          initialLetter =
+                              (displayParticipant.user?.isNotEmpty ?? false)
+                                  ? displayParticipant.user![0].toUpperCase()
+                                  : "U"; // Default initial
+
+                          // Log the avatarUrl before attempting to load it
+                          print(
+                            '[ConversationListPage] SINGLE AVATAR. Participant: "${displayParticipant.user}", URL: "$avatarUrl", Length: ${avatarUrl.length}, CharCodes: ${avatarUrl.codeUnits}',
+                          );
+
+                          if (avatarUrl.isNotEmpty) {
+                            leadingWidget = SizedBox(
+                              width: 56.w,
+                              height: 40.h,
+                              child: CircleAvatar(
+                                backgroundColor:
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.secondaryContainer,
+                                foregroundColor:
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.onSecondaryContainer,
+                                child: ClipOval(
+                                  child: Image.network(
+                                    avatarUrl,
+                                    fit: BoxFit.cover,
+                                    width: 40.h,
+                                    height: 40.h,
+                                    loadingBuilder: (
+                                      BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress,
+                                    ) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2.0,
+                                          value:
+                                              loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                  : null,
+                                        ),
+                                      );
+                                    },
+                                    errorBuilder: (
+                                      BuildContext context,
+                                      Object exception,
+                                      StackTrace? stackTrace,
+                                    ) {
+                                      print(
+                                        '[ConversationListPage] ERROR loading single avatar. Participant: "${displayParticipant.user}", URL: "$avatarUrl", Length: ${avatarUrl.length}, CharCodes: ${avatarUrl.codeUnits}, Exception: $exception',
+                                      );
+                                      return Center(
+                                        child: Text(
+                                          initialLetter,
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .onSecondaryContainer,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            // Display initial letter if avatar URL is empty for the selected participant
+                            leadingWidget = SizedBox(
+                              width: 56.w,
+                              height: 40.h,
+                              child: CircleAvatar(
+                                backgroundColor:
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.secondaryContainer,
+                                foregroundColor:
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.onSecondaryContainer,
+                                child: Text(
+                                  initialLetter,
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.onSecondaryContainer,
+                                  ),
+                                ),
+                              ),
                             );
                           }
                         } else {
-                          List<ParticipantEntity> otherParticipantsForAvatar =
-                              currentUserIdForLogic !=
-                                      null // Use currentUserIdForLogic
-                                  ? conversation.participants
-                                      .where(
-                                        (p) =>
-                                            p.userId != currentUserIdForLogic,
-                                      ) // Use currentUserIdForLogic
-                                      .toList()
-                                  : conversation.participants.toList();
+                          // Case 3: Stacked avatars (totalInConv > 1 and numActualAvatars > 1, or numActualAvatars == 0 if not caught by first 'if')
+                          // This implies multiple participants and potentially multiple avatars to stack.
+                          // We will use all participants for stacking.
+                          List<ParticipantEntity> participantsForStacking =
+                              conversation.participants.toList();
 
-                          if (otherParticipantsForAvatar.isEmpty) {
-                            otherParticipantsForAvatar =
-                                conversation.participants.toList();
+                          if (participantsForStacking.isEmpty) {
+                            leadingWidget = SizedBox(
+                              width: 56.w,
+                              height: 40.h,
+                              child: CircleAvatar(
+                                backgroundColor:
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.secondaryContainer,
+                                foregroundColor:
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.onSecondaryContainer,
+                                child: const Icon(Icons.group_outlined),
+                              ),
+                            );
+                          } else {
+                            List<String> displayAvatars =
+                                participantsForStacking
+                                    .map((p) => p.avatar ?? "")
+                                    .toList();
+                            List<String> displayInitials =
+                                participantsForStacking
+                                    .map(
+                                      (p) =>
+                                          (p.user?.isNotEmpty ?? false)
+                                              ? p.user![0].toUpperCase()
+                                              : "U",
+                                    )
+                                    .toList();
+
+                            leadingWidget = SizedBox(
+                              width: 56.w,
+                              height: 40.h,
+                              child: Stack(
+                                children: [
+                                  // Second avatar in stack (if more than one participant)
+                                  if (participantsForStacking.length > 1)
+                                    Positioned(
+                                      left: 16.w,
+                                      child: CircleAvatar(
+                                        radius: 18.r,
+                                        backgroundColor:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.secondaryContainer,
+                                        foregroundColor:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.onSecondaryContainer,
+                                        backgroundImage:
+                                            displayAvatars.length > 1 &&
+                                                    displayAvatars[1].isNotEmpty
+                                                ? NetworkImage(
+                                                  displayAvatars[1],
+                                                )
+                                                : null,
+                                        child:
+                                            displayAvatars.length > 1 &&
+                                                    displayAvatars[1].isEmpty &&
+                                                    displayInitials.length > 1
+                                                ? Text(
+                                                  displayInitials[1],
+                                                  style: TextStyle(
+                                                    color:
+                                                        Theme.of(context)
+                                                            .colorScheme
+                                                            .onSecondaryContainer,
+                                                  ),
+                                                )
+                                                : null,
+                                      ),
+                                    ),
+                                  // First avatar in stack
+                                  if (participantsForStacking.isNotEmpty)
+                                    Positioned(
+                                      left: 0,
+                                      child: CircleAvatar(
+                                        radius: 18.r,
+                                        backgroundColor:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.secondaryContainer,
+                                        foregroundColor:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.onSecondaryContainer,
+                                        backgroundImage:
+                                            displayAvatars.isNotEmpty &&
+                                                    displayAvatars[0].isNotEmpty
+                                                ? NetworkImage(
+                                                  displayAvatars[0],
+                                                )
+                                                : null,
+                                        child:
+                                            displayAvatars.isNotEmpty &&
+                                                    displayAvatars[0].isEmpty &&
+                                                    displayInitials.isNotEmpty
+                                                ? Text(
+                                                  displayInitials[0],
+                                                  style: TextStyle(
+                                                    color:
+                                                        Theme.of(context)
+                                                            .colorScheme
+                                                            .onSecondaryContainer,
+                                                  ),
+                                                )
+                                                : null,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            );
                           }
-
-                          List<String> displayAvatars =
-                              otherParticipantsForAvatar
-                                  .map((p) => p.avatar ?? "")
-                                  .toList();
-                          List<String> displayInitials =
-                              otherParticipantsForAvatar
-                                  .map(
-                                    (p) =>
-                                        (p.user?.isNotEmpty ?? false)
-                                            ? p.user![0].toUpperCase()
-                                            : "U",
-                                  )
-                                  .toList();
-
-                          leadingWidget = SizedBox(
-                            width: 56.w, // Using screenutil
-                            height: 40.h, // Using screenutil
-                            child: Stack(
-                              children: [
-                                if (displayAvatars.length > 1 &&
-                                    displayInitials.length > 1)
-                                  Positioned(
-                                    left: 16.w,
-                                    child: CircleAvatar(
-                                      radius: 18.r,
-                                      backgroundColor:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.secondaryContainer,
-                                      foregroundColor:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.onSecondaryContainer,
-                                      backgroundImage:
-                                          displayAvatars[1].isNotEmpty
-                                              ? NetworkImage(displayAvatars[1])
-                                              : null,
-                                      child:
-                                          displayAvatars[1].isEmpty
-                                              ? Text(
-                                                displayInitials[1],
-                                                style: TextStyle(
-                                                  color:
-                                                      Theme.of(context)
-                                                          .colorScheme
-                                                          .onSecondaryContainer,
-                                                ),
-                                              )
-                                              : null,
-                                    ),
-                                  ),
-                                if (displayAvatars.isNotEmpty &&
-                                    displayInitials.isNotEmpty)
-                                  Positioned(
-                                    left: 0,
-                                    child: CircleAvatar(
-                                      radius: 18.r,
-                                      backgroundColor:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.secondaryContainer,
-                                      foregroundColor:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.onSecondaryContainer,
-                                      backgroundImage:
-                                          displayAvatars[0].isNotEmpty
-                                              ? NetworkImage(displayAvatars[0])
-                                              : null,
-                                      child:
-                                          displayAvatars[0].isEmpty
-                                              ? Text(
-                                                displayInitials[0],
-                                                style: TextStyle(
-                                                  color:
-                                                      Theme.of(context)
-                                                          .colorScheme
-                                                          .onSecondaryContainer,
-                                                ),
-                                              )
-                                              : null,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          );
                         }
 
                         String lastMessageText =
@@ -483,52 +516,6 @@ class _ConversationListPageState extends State<ConversationListPage>
                           trailing: Text(formattedTimestamp),
                           onTap: () {
                             if (currentUserIdForLogic != null) {
-                              // <--- 加入日誌輸出 --- Start --->
-                              print(
-                                '=========================================',
-                              );
-                              print(
-                                'Attempting to navigate to ChatMessageRoute',
-                              );
-                              print(
-                                '  Conversation ID from Entity: ${conversation.id}',
-                              );
-                              print(
-                                '  Passed Conversation Title (displayTitle): "$displayTitle"',
-                              );
-                              print(
-                                '  Passed Current User ID (currentUserIdForLogic): "$currentUserIdForLogic"',
-                              );
-
-                              // 詳細檢查 conversation 物件中可能導致問題的 String 欄位
-                              print(
-                                '  Conversation Entity Name (conversation.name): "${conversation.name}"',
-                              );
-                              print(
-                                '  Conversation Entity LastMessage (conversation.lastMessage): "${conversation.lastMessage}"',
-                              );
-                              print(
-                                '  Conversation Entity Timestamp: ${conversation.timestamp}',
-                              );
-                              print(
-                                '  Conversation Participants (${conversation.participants.length}):',
-                              );
-                              for (
-                                var p_idx = 0;
-                                p_idx < conversation.participants.length;
-                                p_idx++
-                              ) {
-                                final p = conversation.participants[p_idx];
-                                print('    Participant [$p_idx]:');
-                                print('      UserID: "${p.userId}"');
-                                print('      User Name: "${p.user}"');
-                                print('      Avatar: "${p.avatar}"');
-                              }
-                              print(
-                                '=========================================',
-                              );
-                              // <--- 加入日誌輸出 --- End --->
-
                               context.router.push(
                                 ChatMessageRoute(
                                   conversation: conversation,

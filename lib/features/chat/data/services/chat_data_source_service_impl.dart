@@ -7,6 +7,10 @@ import 'package:meepshoptest/features/chat/data/models/message_api_model.dart';
 import 'package:meepshoptest/features/chat/data/models/message_input_model.dart';
 import 'package:meepshoptest/features/chat/data/models/reaction_update_response_api_model.dart';
 import 'package:meepshoptest/features/chat/data/services/chat_data_source_service.dart'; // Import the correct service interface
+import 'dart:io'; // Added for File operations
+import 'package:path/path.dart' as p; // Added for path operations
+import 'package:mime/mime.dart'; // Added to get mime type
+import 'package:meepshoptest/features/chat/data/models/presigned_upload_info_model.dart'; // Import the new model
 
 @LazySingleton(
   as: ChatDataSourceService,
@@ -80,20 +84,110 @@ class ChatDataSourceServiceImpl implements ChatDataSourceService {
     String conversationId,
     MessageInputModel messagePayload,
   ) async {
-    return _apiClient.post<MessageApiModel>(
-      '/conversations/$conversationId/messages',
-      data: messagePayload.toJson(),
-      dataFromJson: (json) {
-        if (json is Map<String, dynamic> && json.containsKey('message')) {
-          return MessageApiModel.fromJson(
-            json['message'] as Map<String, dynamic>,
+    if (messagePayload.type == 'image' && messagePayload.content.isNotEmpty) {
+      final String localPath = messagePayload.content;
+      final File imageFile = File(localPath);
+
+      if (!await imageFile.exists()) {
+        return Left(
+          Failure.serverError(
+            message: 'Client Error: Image file not found at path: $localPath',
+          ),
+        );
+      }
+
+      final String fileName = p.basename(imageFile.path);
+      final String? fileType = lookupMimeType(imageFile.path);
+
+      if (fileType == null) {
+        return Left(
+          Failure.serverError(
+            message:
+                'Client Error: Could not determine MIME type for file: $fileName',
+          ),
+        );
+      }
+
+      // 1. Get a pre-signed URL from your backend using POST
+      final presignedInfoEither = await _apiClient
+          .post<PresignedUploadInfoModel>(
+            '/uploads/generate-presigned-url', // Corrected endpoint
+            data: {
+              // POST request body
+              'fileName': fileName,
+              'fileType': fileType,
+            },
+            dataFromJson:
+                (json) => PresignedUploadInfoModel.fromJson(
+                  json as Map<String, dynamic>,
+                ),
           );
-        } else if (json is Map<String, dynamic>) {
-          return MessageApiModel.fromJson(json);
-        }
-        throw Exception('DataFromJSon failed to parse for createMessage');
-      },
-    );
+
+      return await presignedInfoEither.fold((failure) => Left(failure), (
+        presignedInfo,
+      ) async {
+        // 2. Upload the file to S3 using the pre-signed URL
+        final fileStream = imageFile.openRead();
+        final fileLength = await imageFile.length();
+
+        final uploadResultEither = await _apiClient.rawPutToUrl(
+          presignedInfo.presignedUrl,
+          dataStream: fileStream,
+          contentLength: fileLength,
+          contentType: fileType,
+          includeAuthHeader: false,
+        );
+
+        return await uploadResultEither.fold((failure) => Left(failure), (
+          _,
+        ) async {
+          // 3. File uploaded successfully, now create the message record
+          //    with s3Key.
+          final MessageInputModel finalMessagePayload = MessageInputModel(
+            senderId: messagePayload.senderId,
+            type: 'image',
+            content:
+                fileName, // local filename, potentially for optimistic UI or backend reference
+            s3Key: presignedInfo.fileKey, // Send fileKey as s3Key
+          );
+
+          return _apiClient.post<MessageApiModel>(
+            '/conversations/$conversationId/messages',
+            data: finalMessagePayload.toJson(),
+            dataFromJson: (json) {
+              if (json is Map<String, dynamic> && json.containsKey('message')) {
+                return MessageApiModel.fromJson(
+                  json['message'] as Map<String, dynamic>,
+                );
+              } else if (json is Map<String, dynamic>) {
+                return MessageApiModel.fromJson(json);
+              }
+              throw Exception(
+                'DataFromJSon failed to parse for createMessage after image upload',
+              );
+            },
+          );
+        });
+      });
+    } else {
+      // For non-image messages or if content is empty for an image (should not happen with current logic)
+      return _apiClient.post<MessageApiModel>(
+        '/conversations/$conversationId/messages',
+        data: messagePayload.toJson(),
+        dataFromJson: (json) {
+          if (json is Map<String, dynamic> && json.containsKey('message')) {
+            return MessageApiModel.fromJson(
+              json['message'] as Map<String, dynamic>,
+            );
+          } else if (json is Map<String, dynamic>) {
+            return MessageApiModel.fromJson(json);
+          }
+          throw Exception(
+            'DataFromJSon failed to parse for createMessage (non-image)',
+          );
+        },
+      );
+    }
   }
 
   @override

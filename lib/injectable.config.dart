@@ -62,10 +62,6 @@ import 'features/conversation/domain/repositories/conversation_repository.dart'
     as _i792;
 import 'features/conversation/domain/usecases/create_conversation_usecase.dart'
     as _i133;
-import 'features/conversation/domain/usecases/get_conversations_usecase.dart'
-    as _i786;
-import 'features/conversation/presentation/blocs/conversation_list_bloc.dart'
-    as _i15;
 import 'features/upload/data/repositories/upload_repository_impl.dart' as _i416;
 import 'features/upload/data/services/upload_api_service.dart' as _i502;
 import 'features/upload/data/services/upload_service.dart' as _i418;
@@ -155,8 +151,6 @@ Future<_i174.GetIt> init(
           repository: gh<_i792.ConversationRepository>()));
   gh.lazySingleton<_i453.ChatRepository>(() => _i382.ChatRepositoryImpl(
       dataSourceService: gh<_i526.ChatDataSourceService>()));
-  gh.lazySingleton<_i786.GetConversationsUseCase>(
-      () => _i786.GetConversationsUseCase(gh<_i792.ConversationRepository>()));
   gh.lazySingleton<_i883.UpdateUserProfileUseCase>(
       () => _i883.UpdateUserProfileUseCase(gh<_i1015.AuthRepository>()));
   gh.lazySingleton<_i855.GetUsersUseCase>(
@@ -188,14 +182,14 @@ Future<_i174.GetIt> init(
         gh<_i290.UploadFileUseCase>(),
         gh<_i302.AuthBloc>(),
       ));
-  gh.lazySingleton<_i330.ConversationListBloc>(() => _i330.ConversationListBloc(
-        gh<_i949.GetConversationsUsecase>(),
-        gh<_i508.ConversationUpdateNotifier>(),
-      ));
   gh.lazySingleton<_i707.CreateConversationUseCase>(
       () => _i707.CreateConversationUseCase(gh<_i453.ChatRepository>()));
-  gh.factory<_i15.ConversationListBloc>(
-      () => _i15.ConversationListBloc(gh<_i786.GetConversationsUseCase>()));
+  gh.factory<_i330.ConversationListBloc>(() => _i330.ConversationListBloc(
+        gh<_i949.GetConversationsUsecase>(),
+        gh<_i508.ConversationUpdateNotifier>(),
+        gh<_i564.ChatWebSocketService>(),
+        gh<_i302.AuthBloc>(),
+      ));
   gh.factory<_i604.CreateConversationBloc>(() => _i604.CreateConversationBloc(
       createConversationUseCase: gh<_i707.CreateConversationUseCase>()));
   return getIt;

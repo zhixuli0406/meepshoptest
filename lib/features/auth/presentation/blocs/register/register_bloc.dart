@@ -4,13 +4,12 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart'; // For XFile
 import 'package:injectable/injectable.dart';
-import 'package:meepshoptest/core/errors/failure.dart';
 import 'package:meepshoptest/features/auth/domain/entities/user_input_entity.dart';
 import 'package:meepshoptest/features/auth/presentation/blocs/auth_bloc.dart'; // To dispatch event to AuthBloc
 import 'package:meepshoptest/features/auth/presentation/blocs/auth_event.dart'; // For AuthRegisterRequested
 import 'package:meepshoptest/features/upload/domain/usecases/get_presigned_url_usecase.dart';
 import 'package:meepshoptest/features/upload/domain/usecases/upload_file_usecase.dart';
-import 'dart:io'; // For File, if needed for conversion from XFile
+// For File, if needed for conversion from XFile
 
 part 'register_event.dart';
 part 'register_state.dart'; // Restored

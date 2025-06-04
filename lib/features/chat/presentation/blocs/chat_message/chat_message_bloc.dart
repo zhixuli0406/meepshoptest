@@ -148,7 +148,7 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
 
     if (_currentLoggedInUserId != null) {
       print(
-        '[ChatMessageBloc] Initializing WebSocket with userId: $_currentLoggedInUserId for conversation: ${_currentConversationId}',
+        '[ChatMessageBloc] Initializing WebSocket with userId: $_currentLoggedInUserId for conversation: $_currentConversationId',
       );
       final bool connected = await _chatWebSocketService.connect(
         _currentLoggedInUserId!,
@@ -203,33 +203,39 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
     );
     final newMessageEntity = event.message;
 
-    if (!_currentMessages.any((m) => m.id == newMessageEntity.id)) {
-      _currentMessages.add(newMessageEntity);
-      _currentMessages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+    final messageIndex = _currentMessages.indexWhere(
+      (m) => m.id == newMessageEntity.id,
+    );
 
-      _conversationUpdateNotifier.notify(lastMessage: newMessageEntity);
-
-      if (state is Initial || state is Loading || state is Error) {
-        print(
-          '[ChatMessageBloc] WebSocket message received while in Initial/Loading/Error. Emitting Loaded.',
-        );
-      } else {
-        print(
-          '[ChatMessageBloc] WebSocket message received while in a stable state. Emitting Loaded.',
-        );
-      }
-      emit(
-        Loaded(
-          messages: List<MessageEntity>.from(_currentMessages),
-          userSessionReactions: Map.from(_userSessionReactions),
-          version: _nextVersion(),
-        ),
-      );
-    } else {
+    if (messageIndex != -1) {
+      // Message exists, update it with the version from WebSocket
       print(
-        '[ChatMessageBloc] WebSocket message ${newMessageEntity.id} already present.',
+        '[ChatMessageBloc] WebSocket message ${newMessageEntity.id} found. Updating existing message.',
       );
+      _currentMessages[messageIndex] =
+          newMessageEntity; // Replace with the newer entity
+    } else {
+      // Message doesn't exist, add it
+      print(
+        '[ChatMessageBloc] WebSocket message ${newMessageEntity.id} is new. Adding to list.',
+      );
+      _currentMessages.add(newMessageEntity);
     }
+
+    _currentMessages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+    _conversationUpdateNotifier.notify(lastMessage: newMessageEntity);
+
+    // Always emit a new state to ensure UI reflects the latest message from WebSocket
+    // This also helps if the message was previously added optimistically via API response,
+    // ensuring the WebSocket version (which might have more up-to-date info like read status later)
+    // refreshes the UI.
+    emit(
+      Loaded(
+        messages: List<MessageEntity>.from(_currentMessages),
+        userSessionReactions: Map.from(_userSessionReactions),
+        version: _nextVersion(), // Increment version to help rebuild listeners
+      ),
+    );
   }
 
   @override
@@ -237,7 +243,6 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
     _webSocketMessagesSubscription?.cancel();
     if (_currentConversationId != null) {
       _chatWebSocketService.leaveConversation(_currentConversationId!);
-      _chatWebSocketService.disconnect();
     }
     return super.close();
   }

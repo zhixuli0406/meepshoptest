@@ -19,32 +19,48 @@ mixin _$ConversationListEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loadConversations,
+    required TResult Function(String currentUserId) initialize,
+    required TResult Function(UpdateConversationListData updateData)
+        handleWebSocketUpdate,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loadConversations,
+    TResult? Function(String currentUserId)? initialize,
+    TResult? Function(UpdateConversationListData updateData)?
+        handleWebSocketUpdate,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loadConversations,
+    TResult Function(String currentUserId)? initialize,
+    TResult Function(UpdateConversationListData updateData)?
+        handleWebSocketUpdate,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadConversations value) loadConversations,
+    required TResult Function(InitializeConversationList value) initialize,
+    required TResult Function(HandleWebSocketUpdate value)
+        handleWebSocketUpdate,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadConversations value)? loadConversations,
+    TResult? Function(InitializeConversationList value)? initialize,
+    TResult? Function(HandleWebSocketUpdate value)? handleWebSocketUpdate,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadConversations value)? loadConversations,
+    TResult Function(InitializeConversationList value)? initialize,
+    TResult Function(HandleWebSocketUpdate value)? handleWebSocketUpdate,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -123,6 +139,9 @@ class _$LoadConversationsImpl
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loadConversations,
+    required TResult Function(String currentUserId) initialize,
+    required TResult Function(UpdateConversationListData updateData)
+        handleWebSocketUpdate,
   }) {
     return loadConversations();
   }
@@ -131,6 +150,9 @@ class _$LoadConversationsImpl
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loadConversations,
+    TResult? Function(String currentUserId)? initialize,
+    TResult? Function(UpdateConversationListData updateData)?
+        handleWebSocketUpdate,
   }) {
     return loadConversations?.call();
   }
@@ -139,6 +161,9 @@ class _$LoadConversationsImpl
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loadConversations,
+    TResult Function(String currentUserId)? initialize,
+    TResult Function(UpdateConversationListData updateData)?
+        handleWebSocketUpdate,
     required TResult orElse(),
   }) {
     if (loadConversations != null) {
@@ -151,6 +176,9 @@ class _$LoadConversationsImpl
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadConversations value) loadConversations,
+    required TResult Function(InitializeConversationList value) initialize,
+    required TResult Function(HandleWebSocketUpdate value)
+        handleWebSocketUpdate,
   }) {
     return loadConversations(this);
   }
@@ -159,6 +187,8 @@ class _$LoadConversationsImpl
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadConversations value)? loadConversations,
+    TResult? Function(InitializeConversationList value)? initialize,
+    TResult? Function(HandleWebSocketUpdate value)? handleWebSocketUpdate,
   }) {
     return loadConversations?.call(this);
   }
@@ -167,6 +197,8 @@ class _$LoadConversationsImpl
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadConversations value)? loadConversations,
+    TResult Function(InitializeConversationList value)? initialize,
+    TResult Function(HandleWebSocketUpdate value)? handleWebSocketUpdate,
     required TResult orElse(),
   }) {
     if (loadConversations != null) {
@@ -178,6 +210,339 @@ class _$LoadConversationsImpl
 
 abstract class LoadConversations implements ConversationListEvent {
   const factory LoadConversations() = _$LoadConversationsImpl;
+}
+
+/// @nodoc
+abstract class _$$InitializeConversationListImplCopyWith<$Res> {
+  factory _$$InitializeConversationListImplCopyWith(
+          _$InitializeConversationListImpl value,
+          $Res Function(_$InitializeConversationListImpl) then) =
+      __$$InitializeConversationListImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String currentUserId});
+}
+
+/// @nodoc
+class __$$InitializeConversationListImplCopyWithImpl<$Res>
+    extends _$ConversationListEventCopyWithImpl<$Res,
+        _$InitializeConversationListImpl>
+    implements _$$InitializeConversationListImplCopyWith<$Res> {
+  __$$InitializeConversationListImplCopyWithImpl(
+      _$InitializeConversationListImpl _value,
+      $Res Function(_$InitializeConversationListImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of ConversationListEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? currentUserId = null,
+  }) {
+    return _then(_$InitializeConversationListImpl(
+      currentUserId: null == currentUserId
+          ? _value.currentUserId
+          : currentUserId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$InitializeConversationListImpl
+    with DiagnosticableTreeMixin
+    implements InitializeConversationList {
+  const _$InitializeConversationListImpl({required this.currentUserId});
+
+  @override
+  final String currentUserId;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'ConversationListEvent.initialize(currentUserId: $currentUserId)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'ConversationListEvent.initialize'))
+      ..add(DiagnosticsProperty('currentUserId', currentUserId));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$InitializeConversationListImpl &&
+            (identical(other.currentUserId, currentUserId) ||
+                other.currentUserId == currentUserId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, currentUserId);
+
+  /// Create a copy of ConversationListEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$InitializeConversationListImplCopyWith<_$InitializeConversationListImpl>
+      get copyWith => __$$InitializeConversationListImplCopyWithImpl<
+          _$InitializeConversationListImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loadConversations,
+    required TResult Function(String currentUserId) initialize,
+    required TResult Function(UpdateConversationListData updateData)
+        handleWebSocketUpdate,
+  }) {
+    return initialize(currentUserId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loadConversations,
+    TResult? Function(String currentUserId)? initialize,
+    TResult? Function(UpdateConversationListData updateData)?
+        handleWebSocketUpdate,
+  }) {
+    return initialize?.call(currentUserId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loadConversations,
+    TResult Function(String currentUserId)? initialize,
+    TResult Function(UpdateConversationListData updateData)?
+        handleWebSocketUpdate,
+    required TResult orElse(),
+  }) {
+    if (initialize != null) {
+      return initialize(currentUserId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadConversations value) loadConversations,
+    required TResult Function(InitializeConversationList value) initialize,
+    required TResult Function(HandleWebSocketUpdate value)
+        handleWebSocketUpdate,
+  }) {
+    return initialize(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadConversations value)? loadConversations,
+    TResult? Function(InitializeConversationList value)? initialize,
+    TResult? Function(HandleWebSocketUpdate value)? handleWebSocketUpdate,
+  }) {
+    return initialize?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadConversations value)? loadConversations,
+    TResult Function(InitializeConversationList value)? initialize,
+    TResult Function(HandleWebSocketUpdate value)? handleWebSocketUpdate,
+    required TResult orElse(),
+  }) {
+    if (initialize != null) {
+      return initialize(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class InitializeConversationList implements ConversationListEvent {
+  const factory InitializeConversationList(
+      {required final String currentUserId}) = _$InitializeConversationListImpl;
+
+  String get currentUserId;
+
+  /// Create a copy of ConversationListEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$InitializeConversationListImplCopyWith<_$InitializeConversationListImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$HandleWebSocketUpdateImplCopyWith<$Res> {
+  factory _$$HandleWebSocketUpdateImplCopyWith(
+          _$HandleWebSocketUpdateImpl value,
+          $Res Function(_$HandleWebSocketUpdateImpl) then) =
+      __$$HandleWebSocketUpdateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({UpdateConversationListData updateData});
+}
+
+/// @nodoc
+class __$$HandleWebSocketUpdateImplCopyWithImpl<$Res>
+    extends _$ConversationListEventCopyWithImpl<$Res,
+        _$HandleWebSocketUpdateImpl>
+    implements _$$HandleWebSocketUpdateImplCopyWith<$Res> {
+  __$$HandleWebSocketUpdateImplCopyWithImpl(_$HandleWebSocketUpdateImpl _value,
+      $Res Function(_$HandleWebSocketUpdateImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of ConversationListEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? updateData = null,
+  }) {
+    return _then(_$HandleWebSocketUpdateImpl(
+      updateData: null == updateData
+          ? _value.updateData
+          : updateData // ignore: cast_nullable_to_non_nullable
+              as UpdateConversationListData,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$HandleWebSocketUpdateImpl
+    with DiagnosticableTreeMixin
+    implements HandleWebSocketUpdate {
+  const _$HandleWebSocketUpdateImpl({required this.updateData});
+
+  @override
+  final UpdateConversationListData updateData;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'ConversationListEvent.handleWebSocketUpdate(updateData: $updateData)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'ConversationListEvent.handleWebSocketUpdate'))
+      ..add(DiagnosticsProperty('updateData', updateData));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HandleWebSocketUpdateImpl &&
+            (identical(other.updateData, updateData) ||
+                other.updateData == updateData));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, updateData);
+
+  /// Create a copy of ConversationListEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HandleWebSocketUpdateImplCopyWith<_$HandleWebSocketUpdateImpl>
+      get copyWith => __$$HandleWebSocketUpdateImplCopyWithImpl<
+          _$HandleWebSocketUpdateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loadConversations,
+    required TResult Function(String currentUserId) initialize,
+    required TResult Function(UpdateConversationListData updateData)
+        handleWebSocketUpdate,
+  }) {
+    return handleWebSocketUpdate(updateData);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loadConversations,
+    TResult? Function(String currentUserId)? initialize,
+    TResult? Function(UpdateConversationListData updateData)?
+        handleWebSocketUpdate,
+  }) {
+    return handleWebSocketUpdate?.call(updateData);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loadConversations,
+    TResult Function(String currentUserId)? initialize,
+    TResult Function(UpdateConversationListData updateData)?
+        handleWebSocketUpdate,
+    required TResult orElse(),
+  }) {
+    if (handleWebSocketUpdate != null) {
+      return handleWebSocketUpdate(updateData);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadConversations value) loadConversations,
+    required TResult Function(InitializeConversationList value) initialize,
+    required TResult Function(HandleWebSocketUpdate value)
+        handleWebSocketUpdate,
+  }) {
+    return handleWebSocketUpdate(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadConversations value)? loadConversations,
+    TResult? Function(InitializeConversationList value)? initialize,
+    TResult? Function(HandleWebSocketUpdate value)? handleWebSocketUpdate,
+  }) {
+    return handleWebSocketUpdate?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadConversations value)? loadConversations,
+    TResult Function(InitializeConversationList value)? initialize,
+    TResult Function(HandleWebSocketUpdate value)? handleWebSocketUpdate,
+    required TResult orElse(),
+  }) {
+    if (handleWebSocketUpdate != null) {
+      return handleWebSocketUpdate(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class HandleWebSocketUpdate implements ConversationListEvent {
+  const factory HandleWebSocketUpdate(
+          {required final UpdateConversationListData updateData}) =
+      _$HandleWebSocketUpdateImpl;
+
+  UpdateConversationListData get updateData;
+
+  /// Create a copy of ConversationListEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$HandleWebSocketUpdateImplCopyWith<_$HandleWebSocketUpdateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc

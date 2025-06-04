@@ -1,5 +1,4 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:meepshoptest/core/errors/exceptions.dart';
 import 'package:meepshoptest/core/errors/failure.dart';
 // Updated import paths
 import 'package:meepshoptest/features/chat/data/models/message_api_model.dart';

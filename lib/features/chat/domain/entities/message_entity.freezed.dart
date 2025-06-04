@@ -22,12 +22,15 @@ mixin _$MessageEntity {
   MessageType get type => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   String? get imageUrl =>
-      throw _privateConstructorUsedError; // In Domain, we prefer direct image URL if type is image
+      throw _privateConstructorUsedError; // Final URL for image after upload
+  String? get localPath =>
+      throw _privateConstructorUsedError; // Temporary local path for image being uploaded
   String? get s3Key =>
       throw _privateConstructorUsedError; // Keep s3Key if needed for other operations, e.g., delete
   DateTime get timestamp => throw _privateConstructorUsedError;
   List<ReactionDetailEntity>? get reactions =>
-      throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // Added reactions field
+  MessageSendStatus? get status => throw _privateConstructorUsedError;
 
   /// Create a copy of MessageEntity
   /// with the given fields replaced by the non-null parameter values.
@@ -49,9 +52,11 @@ abstract class $MessageEntityCopyWith<$Res> {
       MessageType type,
       String content,
       String? imageUrl,
+      String? localPath,
       String? s3Key,
       DateTime timestamp,
-      List<ReactionDetailEntity>? reactions});
+      List<ReactionDetailEntity>? reactions,
+      MessageSendStatus? status});
 
   $MessageSenderEntityCopyWith<$Res> get sender;
 }
@@ -77,9 +82,11 @@ class _$MessageEntityCopyWithImpl<$Res, $Val extends MessageEntity>
     Object? type = null,
     Object? content = null,
     Object? imageUrl = freezed,
+    Object? localPath = freezed,
     Object? s3Key = freezed,
     Object? timestamp = null,
     Object? reactions = freezed,
+    Object? status = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -106,6 +113,10 @@ class _$MessageEntityCopyWithImpl<$Res, $Val extends MessageEntity>
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      localPath: freezed == localPath
+          ? _value.localPath
+          : localPath // ignore: cast_nullable_to_non_nullable
+              as String?,
       s3Key: freezed == s3Key
           ? _value.s3Key
           : s3Key // ignore: cast_nullable_to_non_nullable
@@ -118,6 +129,10 @@ class _$MessageEntityCopyWithImpl<$Res, $Val extends MessageEntity>
           ? _value.reactions
           : reactions // ignore: cast_nullable_to_non_nullable
               as List<ReactionDetailEntity>?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as MessageSendStatus?,
     ) as $Val);
   }
 
@@ -147,9 +162,11 @@ abstract class _$$MessageEntityImplCopyWith<$Res>
       MessageType type,
       String content,
       String? imageUrl,
+      String? localPath,
       String? s3Key,
       DateTime timestamp,
-      List<ReactionDetailEntity>? reactions});
+      List<ReactionDetailEntity>? reactions,
+      MessageSendStatus? status});
 
   @override
   $MessageSenderEntityCopyWith<$Res> get sender;
@@ -174,9 +191,11 @@ class __$$MessageEntityImplCopyWithImpl<$Res>
     Object? type = null,
     Object? content = null,
     Object? imageUrl = freezed,
+    Object? localPath = freezed,
     Object? s3Key = freezed,
     Object? timestamp = null,
     Object? reactions = freezed,
+    Object? status = freezed,
   }) {
     return _then(_$MessageEntityImpl(
       id: null == id
@@ -203,6 +222,10 @@ class __$$MessageEntityImplCopyWithImpl<$Res>
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      localPath: freezed == localPath
+          ? _value.localPath
+          : localPath // ignore: cast_nullable_to_non_nullable
+              as String?,
       s3Key: freezed == s3Key
           ? _value.s3Key
           : s3Key // ignore: cast_nullable_to_non_nullable
@@ -215,6 +238,10 @@ class __$$MessageEntityImplCopyWithImpl<$Res>
           ? _value._reactions
           : reactions // ignore: cast_nullable_to_non_nullable
               as List<ReactionDetailEntity>?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as MessageSendStatus?,
     ));
   }
 }
@@ -229,9 +256,11 @@ class _$MessageEntityImpl implements _MessageEntity {
       required this.type,
       required this.content,
       this.imageUrl,
+      this.localPath,
       this.s3Key,
       required this.timestamp,
-      final List<ReactionDetailEntity>? reactions})
+      final List<ReactionDetailEntity>? reactions,
+      this.status})
       : _reactions = reactions;
 
   @override
@@ -246,7 +275,10 @@ class _$MessageEntityImpl implements _MessageEntity {
   final String content;
   @override
   final String? imageUrl;
-// In Domain, we prefer direct image URL if type is image
+// Final URL for image after upload
+  @override
+  final String? localPath;
+// Temporary local path for image being uploaded
   @override
   final String? s3Key;
 // Keep s3Key if needed for other operations, e.g., delete
@@ -262,9 +294,13 @@ class _$MessageEntityImpl implements _MessageEntity {
     return EqualUnmodifiableListView(value);
   }
 
+// Added reactions field
+  @override
+  final MessageSendStatus? status;
+
   @override
   String toString() {
-    return 'MessageEntity(id: $id, conversationId: $conversationId, sender: $sender, type: $type, content: $content, imageUrl: $imageUrl, s3Key: $s3Key, timestamp: $timestamp, reactions: $reactions)';
+    return 'MessageEntity(id: $id, conversationId: $conversationId, sender: $sender, type: $type, content: $content, imageUrl: $imageUrl, localPath: $localPath, s3Key: $s3Key, timestamp: $timestamp, reactions: $reactions, status: $status)';
   }
 
   @override
@@ -280,11 +316,14 @@ class _$MessageEntityImpl implements _MessageEntity {
             (identical(other.content, content) || other.content == content) &&
             (identical(other.imageUrl, imageUrl) ||
                 other.imageUrl == imageUrl) &&
+            (identical(other.localPath, localPath) ||
+                other.localPath == localPath) &&
             (identical(other.s3Key, s3Key) || other.s3Key == s3Key) &&
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp) &&
             const DeepCollectionEquality()
-                .equals(other._reactions, _reactions));
+                .equals(other._reactions, _reactions) &&
+            (identical(other.status, status) || other.status == status));
   }
 
   @override
@@ -296,9 +335,11 @@ class _$MessageEntityImpl implements _MessageEntity {
       type,
       content,
       imageUrl,
+      localPath,
       s3Key,
       timestamp,
-      const DeepCollectionEquality().hash(_reactions));
+      const DeepCollectionEquality().hash(_reactions),
+      status);
 
   /// Create a copy of MessageEntity
   /// with the given fields replaced by the non-null parameter values.
@@ -317,9 +358,11 @@ abstract class _MessageEntity implements MessageEntity {
       required final MessageType type,
       required final String content,
       final String? imageUrl,
+      final String? localPath,
       final String? s3Key,
       required final DateTime timestamp,
-      final List<ReactionDetailEntity>? reactions}) = _$MessageEntityImpl;
+      final List<ReactionDetailEntity>? reactions,
+      final MessageSendStatus? status}) = _$MessageEntityImpl;
 
   @override
   String get id;
@@ -332,14 +375,17 @@ abstract class _MessageEntity implements MessageEntity {
   @override
   String get content;
   @override
-  String?
-      get imageUrl; // In Domain, we prefer direct image URL if type is image
+  String? get imageUrl; // Final URL for image after upload
+  @override
+  String? get localPath; // Temporary local path for image being uploaded
   @override
   String? get s3Key; // Keep s3Key if needed for other operations, e.g., delete
   @override
   DateTime get timestamp;
   @override
-  List<ReactionDetailEntity>? get reactions;
+  List<ReactionDetailEntity>? get reactions; // Added reactions field
+  @override
+  MessageSendStatus? get status;
 
   /// Create a copy of MessageEntity
   /// with the given fields replaced by the non-null parameter values.

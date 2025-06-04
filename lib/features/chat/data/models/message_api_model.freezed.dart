@@ -32,6 +32,8 @@ mixin _$MessageApiModel {
   String? get content => throw _privateConstructorUsedError;
   Map<String, int>? get reactions => throw _privateConstructorUsedError;
   List<String>? get readBy => throw _privateConstructorUsedError;
+  @JsonKey(name: 'imageUrl')
+  String? get imageUrl => throw _privateConstructorUsedError;
   int? get legacyConvId => throw _privateConstructorUsedError;
   int? get legacySenderId => throw _privateConstructorUsedError;
   @JsonKey(name: '__v')
@@ -63,6 +65,7 @@ abstract class $MessageApiModelCopyWith<$Res> {
       String? content,
       Map<String, int>? reactions,
       List<String>? readBy,
+      @JsonKey(name: 'imageUrl') String? imageUrl,
       int? legacyConvId,
       int? legacySenderId,
       @JsonKey(name: '__v') int? v,
@@ -94,6 +97,7 @@ class _$MessageApiModelCopyWithImpl<$Res, $Val extends MessageApiModel>
     Object? content = freezed,
     Object? reactions = freezed,
     Object? readBy = freezed,
+    Object? imageUrl = freezed,
     Object? legacyConvId = freezed,
     Object? legacySenderId = freezed,
     Object? v = freezed,
@@ -132,6 +136,10 @@ class _$MessageApiModelCopyWithImpl<$Res, $Val extends MessageApiModel>
           ? _value.readBy
           : readBy // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      imageUrl: freezed == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       legacyConvId: freezed == legacyConvId
           ? _value.legacyConvId
           : legacyConvId // ignore: cast_nullable_to_non_nullable
@@ -183,6 +191,7 @@ abstract class _$$MessageApiModelImplCopyWith<$Res>
       String? content,
       Map<String, int>? reactions,
       List<String>? readBy,
+      @JsonKey(name: 'imageUrl') String? imageUrl,
       int? legacyConvId,
       int? legacySenderId,
       @JsonKey(name: '__v') int? v,
@@ -213,6 +222,7 @@ class __$$MessageApiModelImplCopyWithImpl<$Res>
     Object? content = freezed,
     Object? reactions = freezed,
     Object? readBy = freezed,
+    Object? imageUrl = freezed,
     Object? legacyConvId = freezed,
     Object? legacySenderId = freezed,
     Object? v = freezed,
@@ -251,6 +261,10 @@ class __$$MessageApiModelImplCopyWithImpl<$Res>
           ? _value._readBy
           : readBy // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      imageUrl: freezed == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       legacyConvId: freezed == legacyConvId
           ? _value.legacyConvId
           : legacyConvId // ignore: cast_nullable_to_non_nullable
@@ -284,6 +298,7 @@ class _$MessageApiModelImpl implements _MessageApiModel {
       this.content,
       final Map<String, int>? reactions,
       final List<String>? readBy,
+      @JsonKey(name: 'imageUrl') this.imageUrl,
       this.legacyConvId,
       this.legacySenderId,
       @JsonKey(name: '__v') this.v,
@@ -331,6 +346,9 @@ class _$MessageApiModelImpl implements _MessageApiModel {
   }
 
   @override
+  @JsonKey(name: 'imageUrl')
+  final String? imageUrl;
+  @override
   final int? legacyConvId;
   @override
   final int? legacySenderId;
@@ -342,7 +360,7 @@ class _$MessageApiModelImpl implements _MessageApiModel {
 
   @override
   String toString() {
-    return 'MessageApiModel(id: $id, conversationId: $conversationId, sender: $sender, createdAt: $createdAt, type: $type, content: $content, reactions: $reactions, readBy: $readBy, legacyConvId: $legacyConvId, legacySenderId: $legacySenderId, v: $v, updatedAt: $updatedAt)';
+    return 'MessageApiModel(id: $id, conversationId: $conversationId, sender: $sender, createdAt: $createdAt, type: $type, content: $content, reactions: $reactions, readBy: $readBy, imageUrl: $imageUrl, legacyConvId: $legacyConvId, legacySenderId: $legacySenderId, v: $v, updatedAt: $updatedAt)';
   }
 
   @override
@@ -361,6 +379,8 @@ class _$MessageApiModelImpl implements _MessageApiModel {
             const DeepCollectionEquality()
                 .equals(other._reactions, _reactions) &&
             const DeepCollectionEquality().equals(other._readBy, _readBy) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
             (identical(other.legacyConvId, legacyConvId) ||
                 other.legacyConvId == legacyConvId) &&
             (identical(other.legacySenderId, legacySenderId) ||
@@ -382,6 +402,7 @@ class _$MessageApiModelImpl implements _MessageApiModel {
       content,
       const DeepCollectionEquality().hash(_reactions),
       const DeepCollectionEquality().hash(_readBy),
+      imageUrl,
       legacyConvId,
       legacySenderId,
       v,
@@ -414,6 +435,7 @@ abstract class _MessageApiModel implements MessageApiModel {
       final String? content,
       final Map<String, int>? reactions,
       final List<String>? readBy,
+      @JsonKey(name: 'imageUrl') final String? imageUrl,
       final int? legacyConvId,
       final int? legacySenderId,
       @JsonKey(name: '__v') final int? v,
@@ -441,6 +463,9 @@ abstract class _MessageApiModel implements MessageApiModel {
   Map<String, int>? get reactions;
   @override
   List<String>? get readBy;
+  @override
+  @JsonKey(name: 'imageUrl')
+  String? get imageUrl;
   @override
   int? get legacyConvId;
   @override

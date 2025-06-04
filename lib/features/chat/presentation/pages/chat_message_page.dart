@@ -16,6 +16,7 @@ import 'package:meepshoptest/features/chat/presentation/blocs/chat_message/chat_
 import 'package:meepshoptest/injectable.dart';
 import 'package:meepshoptest/core/router/router.dart';
 import 'package:meepshoptest/features/chat/domain/entities/message_type.dart';
+import 'package:meepshoptest/features/chat/domain/entities/message_send_status.dart';
 
 @RoutePage()
 class ChatMessagePage extends StatefulWidget {
@@ -41,9 +42,35 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
   final ImagePicker _picker = ImagePicker();
   OverlayEntry? _reactionOverlayEntry;
 
+  // Listener for focus node
+  void _onFocusChange() {
+    if (_messageFocusNode.hasFocus) {
+      // Delay scrolling to allow keyboard animation to complete
+      Future.delayed(const Duration(milliseconds: 300), () {
+        // Check if still mounted and has focus before scrolling
+        if (mounted && _messageFocusNode.hasFocus) {
+          _scrollToBottom();
+        }
+      });
+    }
+  }
+
+  // Listener for text controller to update send button state
+  void _onTextChanged() {
+    if (mounted) {
+      setState(() {
+        // This will trigger a rebuild of the input bar, updating the send button's state.
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _messageFocusNode.addListener(_onFocusChange);
+    _messageController.addListener(
+      _onTextChanged,
+    ); // Add listener for text changes
 
     print('[ChatMessagePage] initState called.');
     print('[ChatMessagePage] Received Conversation Details:');
@@ -69,6 +96,10 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
 
   @override
   void dispose() {
+    _messageFocusNode.removeListener(_onFocusChange);
+    _messageController.removeListener(
+      _onTextChanged,
+    ); // Remove listener for text changes
     _messageController.dispose();
     _messageFocusNode.dispose();
     _scrollController.dispose();
@@ -302,7 +333,8 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
               Expanded(
                 child: BlocConsumer<ChatMessageBloc, ChatMessageState>(
                   listener: (consumerContext, state) {
-                    if (state is MessageSent ||
+                    if (state is Loaded ||
+                        state is MessageSent ||
                         state is MessageReactionUpdated) {
                       WidgetsBinding.instance.addPostFrameCallback(
                         (_) => _scrollToBottom(),
@@ -451,7 +483,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
 
     final String formattedTimestamp = DateFormat(
       'yyyy-MM-dd HH:mm',
-    ).format(message.timestamp);
+    ).format(message.timestamp.toLocal());
 
     final TextStyle metadataStyle =
         theme.textTheme.bodySmall?.copyWith(
@@ -473,45 +505,114 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
 
     Widget messageContentWidget;
     if (message.type == MessageType.image) {
-      final imagePath = message.content;
-      final bool isLocal = imagePath.startsWith('/');
-      Widget imageWidget;
-      if (isLocal) {
-        imageWidget = Image.file(
-          File(imagePath),
+      Widget imageContent;
+
+      if (message.status == MessageSendStatus.sending) {
+        imageContent = _buildImagePlaceholder(
+          isLoading: true,
+          localPath: message.localPath,
+        );
+      } else if (message.status == MessageSendStatus.failed) {
+        imageContent = _buildImagePlaceholder(
+          isError: true,
+          errorMessage: 'Upload Failed',
+          localPath: message.localPath,
+        );
+      } else if (message.imageUrl != null && message.imageUrl!.isNotEmpty) {
+        // Sent successfully and has a remote URL
+        bool isValidNetworkUrl =
+            Uri.tryParse(message.imageUrl!)?.isAbsolute ?? false;
+        if (isValidNetworkUrl &&
+            (message.imageUrl!.startsWith('http://') ||
+                message.imageUrl!.startsWith('https://'))) {
+          imageContent = CachedNetworkImage(
+            imageUrl: message.imageUrl!,
+            fit: BoxFit.contain,
+            placeholder:
+                (context, url) => _buildImagePlaceholder(
+                  isLoading: true,
+                ), // Placeholder while loading network image
+            errorWidget: (context, url, error) {
+              print(
+                '[ChatMessagePage] CachedNetworkImage error for url: $url, error: $error',
+              );
+              return _buildImagePlaceholder(
+                isError: true,
+                errorMessage: 'Load Failed',
+              );
+            },
+          );
+        } else {
+          print('[ChatMessagePage] Invalid URL for image: ${message.imageUrl}');
+          imageContent = _buildImagePlaceholder(
+            isError: true,
+            errorMessage: 'Invalid URL',
+          );
+        }
+      } else if (message.localPath != null && message.localPath!.isNotEmpty) {
+        // This case handles when the image is just picked and not yet in 'sending' status, OR
+        // if 'sending' status implies we should still try to show local path before network URL is available.
+        // It could also be a fallback if status is unexpectedly null but localPath exists.
+        imageContent = Image.file(
+          File(message.localPath!),
           fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) {
-            return const Icon(Icons.broken_image, size: 50);
+            print(
+              '[ChatMessagePage] Image.file error for localPath: ${message.localPath}, error: $error',
+            );
+            return _buildImagePlaceholder(
+              isError: true,
+              errorMessage: 'Preview Failed',
+            );
           },
         );
+        // If it's an optimistic UI for an image not yet 'sending', we might want a loading overlay too.
+        // This depends on how BLoC updates status. If status is set to 'sending' *immediately* with localPath,
+        // the first branch (status == sending) will catch it.
       } else {
-        imageWidget = CachedNetworkImage(
-          imageUrl: imagePath,
-          fit: BoxFit.contain,
-          placeholder:
-              (context, url) =>
-                  const Center(child: CircularProgressIndicator()),
-          errorWidget: (context, url, error) {
-            return const Icon(Icons.broken_image, size: 50);
-          },
+        // Default fallback: if no URL, no localPath, and not explicitly sending/failed.
+        // This might indicate an image message that's still being prepared by the BLoC optimistically.
+        imageContent = _buildImagePlaceholder(
+          isLoading: true,
+          CIKLog_Debug_Marker: "Image with no path and not sending/failed",
         );
       }
-      messageContentWidget = GestureDetector(
-        onTap: () {
-          AutoRouter.of(bubbleContext).push(
-            FullScreenImageViewerRoute(
-              imageUrl: imagePath,
-              isFilePath: isLocal,
-            ),
-          );
-        },
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: 200.h,
-            maxWidth: MediaQuery.of(bubbleContext).size.width * 0.6,
-          ),
-          child: imageWidget,
+
+      // Add GestureDetector for full screen view only if not failed and a valid path/URL exists
+      bool canViewFullScreen =
+          (message.status != MessageSendStatus.failed) &&
+          ((message.imageUrl != null && message.imageUrl!.isNotEmpty) ||
+              (message.localPath != null && message.localPath!.isNotEmpty));
+
+      String? pathForViewer =
+          (message.imageUrl != null && message.imageUrl!.isNotEmpty)
+              ? message.imageUrl
+              : message.localPath;
+      bool isViewerPathLocal =
+          !(message.imageUrl != null && message.imageUrl!.isNotEmpty);
+
+      if (canViewFullScreen && pathForViewer != null) {
+        messageContentWidget = GestureDetector(
+          onTap: () {
+            AutoRouter.of(bubbleContext).push(
+              FullScreenImageViewerRoute(
+                imageUrl: pathForViewer,
+                isFilePath: isViewerPathLocal,
+              ),
+            );
+          },
+          child: imageContent,
+        );
+      } else {
+        messageContentWidget = imageContent;
+      }
+
+      messageContentWidget = ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: ScreenUtil().screenWidth * 0.6,
+          maxHeight: ScreenUtil().screenHeight * 0.4,
         ),
+        child: messageContentWidget,
       );
     } else if (message.type == MessageType.system) {
       return Padding(
@@ -553,9 +654,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
       builder: (BuildContext bubbleSpecificContext) {
         return GestureDetector(
           onLongPress: () {
-            if (message.id != null) {
-              _showReactionPicker(bubbleSpecificContext, message);
-            }
+            _showReactionPicker(bubbleSpecificContext, message);
           },
           onTap: _removeReactionOverlay,
           child: Column(
@@ -662,8 +761,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
     Map<String, Set<ReactionType>> currentUserSessionReactions,
   ) {
     final Set<ReactionType> userReactionsForThisMessage =
-        (message.id != null &&
-                currentUserSessionReactions.containsKey(message.id))
+        (currentUserSessionReactions.containsKey(message.id))
             ? currentUserSessionReactions[message.id]!
             : <ReactionType>{};
 
@@ -682,16 +780,14 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
 
               return GestureDetector(
                 onTap: () {
-                  if (message.id != null) {
-                    bloc.add(
-                      ChatMessageEvent.addReaction(
-                        conversationId: widget.conversation.id,
-                        messageId: message.id!,
-                        reactionType: reactionDetail.type,
-                        currentUserId: widget.currentUserId,
-                      ),
-                    );
-                  }
+                  bloc.add(
+                    ChatMessageEvent.addReaction(
+                      conversationId: widget.conversation.id,
+                      messageId: message.id!,
+                      reactionType: reactionDetail.type,
+                      currentUserId: widget.currentUserId,
+                    ),
+                  );
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -777,11 +873,14 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
         child: Row(
           children: [
             IconButton(
-              icon: Icon(Icons.camera_alt, color: theme.colorScheme.primary),
-              tooltip: 'Take Photo',
+              icon: Icon(
+                Icons.photo_library_outlined,
+                color: theme.colorScheme.primary,
+              ),
+              tooltip: 'Select Photo from Gallery',
               onPressed: () {
                 _pickImage(
-                  ImageSource.camera,
+                  ImageSource.gallery,
                   pageContext.read<ChatMessageBloc>(),
                 );
               },
@@ -799,7 +898,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
                   filled: true,
                   fillColor: Theme.of(
                     pageContext,
-                  ).colorScheme.surfaceVariant.withOpacity(0.5),
+                  ).colorScheme.surfaceContainerHighest.withOpacity(0.5),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16.0,
                     vertical: 10.0,
@@ -865,5 +964,87 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
     _messageController.clear();
     _messageFocusNode.requestFocus();
     Future.delayed(const Duration(milliseconds: 100), _scrollToBottom);
+  }
+
+  // Helper method to build image placeholder for loading/error states
+  Widget _buildImagePlaceholder({
+    bool isLoading = false,
+    bool isError = false,
+    String? errorMessage,
+    String?
+    localPath, // Optionally show local image as background for placeholder
+    String? CIKLog_Debug_Marker,
+  }) {
+    if (CIKLog_Debug_Marker != null) {
+      print('[ChatMessagePage][PlaceholderDebug] $CIKLog_Debug_Marker');
+    }
+    Widget? backgroundWidget;
+    if (localPath != null && localPath.isNotEmpty) {
+      try {
+        backgroundWidget = Image.file(
+          File(localPath),
+          fit: BoxFit.contain,
+          errorBuilder:
+              (c, e, s) =>
+                  const SizedBox.shrink(), // Don't show another error if local preview fails
+        );
+      } catch (e) {
+        print(
+          '[ChatMessagePage] Error creating backgroundWidget from localPath $localPath: $e',
+        );
+        backgroundWidget = const SizedBox.shrink();
+      }
+    }
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        if (backgroundWidget != null) backgroundWidget,
+        if (isLoading)
+          Container(
+            // width: 50, // Commented out to allow it to fill the parent ConstrainedBox for better visual
+            // height: 50,
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(
+                backgroundWidget != null ? 0.3 : 0.1,
+              ), // Darker if has background
+              // borderRadius: BorderRadius.circular(8), // Commented out to fill parent
+            ),
+            child: const Center(
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        if (isError)
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.7),
+              // borderRadius: BorderRadius.circular(8), // Commented out to fill parent
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.error_outline, color: Colors.red[300], size: 24),
+                if (errorMessage != null) ...[
+                  Gap(4.h),
+                  Text(
+                    errorMessage,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white, fontSize: 10.sp),
+                  ),
+                ],
+              ],
+            ),
+          ),
+      ],
+    );
   }
 }

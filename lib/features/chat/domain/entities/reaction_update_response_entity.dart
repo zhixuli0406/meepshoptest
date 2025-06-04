@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:meepshoptest/features/chat/domain/entities/reactions_entity.dart'; // For ReactionDetailEntity
+// For ReactionDetailEntity
 
 part 'reaction_update_response_entity.freezed.dart';
 

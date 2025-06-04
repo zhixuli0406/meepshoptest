@@ -15,8 +15,9 @@ class MessageInputModel with _$MessageInputModel {
     required String senderId,
     required String
     type, // Changed to String. API will expect "text" or "image".
-    required String content,
-    String? s3Key, // Typically required for image type
+    required String
+    content, // For text messages, or local path for optimistic image update
+    String? s3Key, // The key for the S3 object, to be sent for image messages
   }) = _MessageInputModel;
 
   factory MessageInputModel.fromJson(Map<String, dynamic> json) =>

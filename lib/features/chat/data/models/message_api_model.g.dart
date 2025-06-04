@@ -23,6 +23,7 @@ _$MessageApiModelImpl _$$MessageApiModelImplFromJson(
       ),
       readBy:
           (json['read_by'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      imageUrl: json['imageUrl'] as String?,
       legacyConvId: (json['legacy_conv_id'] as num?)?.toInt(),
       legacySenderId: (json['legacy_sender_id'] as num?)?.toInt(),
       v: (json['__v'] as num?)?.toInt(),
@@ -40,6 +41,7 @@ Map<String, dynamic> _$$MessageApiModelImplToJson(
       'content': instance.content,
       'reactions': instance.reactions,
       'read_by': instance.readBy,
+      'imageUrl': instance.imageUrl,
       'legacy_conv_id': instance.legacyConvId,
       'legacy_sender_id': instance.legacySenderId,
       '__v': instance.v,

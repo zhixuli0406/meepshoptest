@@ -21,16 +21,6 @@ class GetConversationsUsecase
     NoParams params,
   ) async {
     print('[GetConversationsUsecase] call started.');
-    if (_repository == null) {
-      print(
-        '[GetConversationsUsecase] FATAL: _repository is NULL before calling!',
-      );
-      return Left(
-        const Failure.unknownError(
-          message: '_repository in GetConversationsUsecase is null',
-        ),
-      );
-    }
     try {
       final result = await _repository.getConversations();
       print(

@@ -21,6 +21,7 @@ class MessageApiModel with _$MessageApiModel {
     String? content,
     Map<String, int>? reactions,
     List<String>? readBy,
+    @JsonKey(name: 'imageUrl') String? imageUrl,
     int? legacyConvId,
     int? legacySenderId,
     @JsonKey(name: '__v') int? v,
@@ -104,7 +105,8 @@ extension MessageApiModelX on MessageApiModel {
       type: domainMessageType,
       content: displayContent,
       reactions: reactionEntities,
-      // s3Key and imageUrl are part of MessageEntity, but MessageApiModel doesn't have direct fields for them yet.
+      imageUrl: imageUrl,
+      // s3Key is part of MessageEntity, but MessageApiModel doesn't have direct fields for them yet.
       // If API provides them, they should be added to MessageApiModel and mapped here.
       // For now, they will be null/default in MessageEntity unless content itself is the URL for an image.
     );

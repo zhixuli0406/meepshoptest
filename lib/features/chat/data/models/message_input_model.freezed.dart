@@ -23,7 +23,8 @@ mixin _$MessageInputModel {
   String get senderId => throw _privateConstructorUsedError;
   String get type =>
       throw _privateConstructorUsedError; // Changed to String. API will expect "text" or "image".
-  String get content => throw _privateConstructorUsedError;
+  String get content =>
+      throw _privateConstructorUsedError; // For text messages, or local path for optimistic image update
   String? get s3Key => throw _privateConstructorUsedError;
 
   /// Serializes this MessageInputModel to a JSON map.
@@ -156,6 +157,7 @@ class _$MessageInputModelImpl implements _MessageInputModel {
 // Changed to String. API will expect "text" or "image".
   @override
   final String content;
+// For text messages, or local path for optimistic image update
   @override
   final String? s3Key;
 
@@ -212,7 +214,8 @@ abstract class _MessageInputModel implements MessageInputModel {
   @override
   String get type; // Changed to String. API will expect "text" or "image".
   @override
-  String get content;
+  String
+      get content; // For text messages, or local path for optimistic image update
   @override
   String? get s3Key;
 

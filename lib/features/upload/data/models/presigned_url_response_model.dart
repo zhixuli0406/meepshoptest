@@ -9,7 +9,7 @@ sealed class PresignedUrlResponseModel with _$PresignedUrlResponseModel {
   const factory PresignedUrlResponseModel({
     required String presignedUrl,
     required String fileKey,
-    required String publicUrl,
+    String? publicUrl,
   }) = _PresignedUrlResponseModel;
 
   factory PresignedUrlResponseModel.fromJson(Map<String, dynamic> json) =>
@@ -22,7 +22,7 @@ extension PresignedUrlResponseModelX on PresignedUrlResponseModel {
     return PresignedUrlResponseEntity(
       presignedUrl: presignedUrl,
       fileKey: fileKey,
-      publicUrl: publicUrl,
+      publicUrl: publicUrl ?? '',
     );
   }
 }

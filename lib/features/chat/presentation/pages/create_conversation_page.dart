@@ -286,43 +286,32 @@ class _CreateConversationViewState extends State<_CreateConversationView> {
     BuildContext context,
     ConversationEntity conversation,
   ) {
-    if (widget.currentUserId != null) {
-      String title = conversation.name;
-      if (title.isEmpty) {
-        if (conversation.participants.isNotEmpty) {
+    String title = conversation.name;
+    if (title.isEmpty) {
+      if (conversation.participants.isNotEmpty) {
+        title = conversation.participants
+            .where((p) => p.userId != widget.currentUserId)
+            .map((p) => p.user ?? 'Participant')
+            .join(', ');
+        if (title.isEmpty) {
+          // If still empty (e.g. only current user is participant)
           title = conversation.participants
-              .where((p) => p.userId != widget.currentUserId)
               .map((p) => p.user ?? 'Participant')
               .join(', ');
-          if (title.isEmpty) {
-            // If still empty (e.g. only current user is participant)
-            title = conversation.participants
-                .map((p) => p.user ?? 'Participant')
-                .join(', ');
-          }
         }
       }
-      if (title.isEmpty) title = "New Chat"; // Fallback
-
-      context.router.popUntil((route) {
-        return route.settings.name == ConversationListRoute.name ||
-            route.isFirst;
-      });
-      context.pushRoute(
-        ChatMessageRoute(
-          conversation: conversation,
-          conversationTitle: title,
-          currentUserId: widget.currentUserId!,
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Error: User ID missing, cannot open chat."),
-          backgroundColor: Colors.red,
-        ),
-      );
-      context.router.pop();
     }
+    if (title.isEmpty) title = "New Chat"; // Fallback
+
+    context.router.popUntil((route) {
+      return route.settings.name == ConversationListRoute.name || route.isFirst;
+    });
+    context.pushRoute(
+      ChatMessageRoute(
+        conversation: conversation,
+        conversationTitle: title,
+        currentUserId: widget.currentUserId!,
+      ),
+    );
   }
 }

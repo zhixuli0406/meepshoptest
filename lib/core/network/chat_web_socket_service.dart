@@ -49,7 +49,7 @@ class UserTypingData {
 }
 
 class ChatWebSocketService {
-  final String _serverUrl = 'wss://meeptestapi.zhixu-li.com';
+  final String _serverUrl = 'wss://meeptestapi.zhixu-li.com:443';
   IO.Socket? _socket;
   StreamController<MessageModel>? _messageStreamController;
   StreamController<String>? _connectedMessageStreamController;

@@ -15,6 +15,8 @@ _$MessageModelImpl _$$MessageModelImplFromJson(Map<String, dynamic> json) =>
           : SenderModel.fromJson(json['senderId'] as Map<String, dynamic>),
       type: json['type'] as String,
       content: json['content'] as String,
+      s3Key: json['s3_key'] as String?,
+      imageUrl: json['imageUrl'] as String?,
       reactions: (json['reactions'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, (e as num).toInt()),
       ),
@@ -33,6 +35,8 @@ Map<String, dynamic> _$$MessageModelImplToJson(_$MessageModelImpl instance) =>
       'senderId': instance.sender,
       'type': instance.type,
       'content': instance.content,
+      's3_key': instance.s3Key,
+      'imageUrl': instance.imageUrl,
       'reactions': instance.reactions,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
