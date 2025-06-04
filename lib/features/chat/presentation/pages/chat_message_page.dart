@@ -760,7 +760,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
             : <ReactionType>{};
 
     return Padding(
-      padding: const EdgeInsets.only(top: 4.0, left: 12.0, right: 8.0),
+      padding: const EdgeInsets.only(top: 4.0, left: 5.0, right: 8.0),
       child: Wrap(
         spacing: 4.0,
         runSpacing: 2.0,
