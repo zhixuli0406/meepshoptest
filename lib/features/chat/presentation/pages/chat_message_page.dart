@@ -778,7 +778,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
                   bloc.add(
                     ChatMessageEvent.addReaction(
                       conversationId: widget.conversation.id,
-                      messageId: message.id!,
+                      messageId: message.id,
                       reactionType: reactionDetail.type,
                       currentUserId: widget.currentUserId,
                     ),
@@ -798,7 +798,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
                             : Theme.of(displayContext)
                                 .colorScheme
                                 .surfaceContainerHighest
-                                .withOpacity(0.5),
+                                .withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(10.0),
                     border: Border.all(
                       color:
@@ -806,7 +806,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
                               ? Theme.of(displayContext).colorScheme.primary
                               : Theme.of(
                                 displayContext,
-                              ).colorScheme.outline.withOpacity(0.3),
+                              ).colorScheme.outline.withValues(alpha: 0.3),
                       width:
                           currentUserReacted
                               ? 1.5
