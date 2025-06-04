@@ -734,20 +734,14 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Column(
-        crossAxisAlignment:
-            isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment:
+            isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment:
-                isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (!isCurrentUser) ...[avatarWidget, Gap(8.w)],
-              Flexible(child: contentColumn),
-              if (isCurrentUser) ...[Gap(8.w), avatarWidget],
-            ],
-          ),
+          if (!isCurrentUser) ...[avatarWidget, Gap(8.w)],
+          Flexible(child: contentColumn),
+          if (isCurrentUser) ...[Gap(8.w), avatarWidget],
         ],
       ),
     );
@@ -766,10 +760,11 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
             : <ReactionType>{};
 
     return Padding(
-      padding: const EdgeInsets.only(top: 4.0, left: 8.0, right: 8.0),
+      padding: const EdgeInsets.only(top: 4.0, left: 12.0, right: 8.0),
       child: Wrap(
         spacing: 4.0,
         runSpacing: 2.0,
+        crossAxisAlignment: WrapCrossAlignment.start,
         children:
             reactions.map((reactionDetail) {
               if (reactionDetail.count <= 0) return const SizedBox.shrink();
@@ -820,6 +815,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         reactionDetail.type.emoji,

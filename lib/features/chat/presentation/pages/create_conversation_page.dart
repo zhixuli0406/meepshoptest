@@ -13,7 +13,7 @@ import 'package:meepshoptest/features/chat/presentation/blocs/create_conversatio
 import 'package:meepshoptest/features/user_selection/presentation/blocs/user_list_bloc.dart'
     as user_list_bloc;
 import 'package:meepshoptest/injectable.dart'; // For getIt
-import 'package:meepshoptest/features/chat/presentation/blocs/conversation_list/conversation_list_bloc.dart';
+import 'package:meepshoptest/features/conversation/presentation/blocs/conversation_list_bloc.dart';
 
 @RoutePage()
 class CreateConversationPage extends StatelessWidget {

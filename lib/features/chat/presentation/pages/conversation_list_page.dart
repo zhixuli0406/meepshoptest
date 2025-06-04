@@ -11,7 +11,7 @@ import 'package:meepshoptest/features/auth/presentation/blocs/auth_event.dart';
 import 'package:meepshoptest/features/auth/presentation/blocs/auth_state.dart';
 import 'package:meepshoptest/features/chat/domain/entities/conversation_entity.dart';
 import 'package:meepshoptest/features/chat/domain/entities/participant_entity.dart';
-import 'package:meepshoptest/features/chat/presentation/blocs/conversation_list/conversation_list_bloc.dart';
+import 'package:meepshoptest/features/conversation/presentation/blocs/conversation_list_bloc.dart';
 import 'package:meepshoptest/injectable.dart';
 import 'package:meepshoptest/main.dart'; // Import for routeObserver
 

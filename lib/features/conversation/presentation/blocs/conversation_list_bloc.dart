@@ -165,6 +165,7 @@ class ConversationListBloc
         updatedConversations[index] = originalConversation.copyWith(
           lastMessage: displayMessageContent,
           timestamp: newMessageEntity.timestamp,
+          updatedAt: DateTime.now(),
         );
         print(
           '[ConversationListBloc] Updated existing conversation: ${originalConversation.id}',
@@ -252,6 +253,7 @@ class ConversationListBloc
               modifiableConversations[index] = originalConversation.copyWith(
                 lastMessage: displayMessageContent,
                 timestamp: newlySentMessage.timestamp,
+                updatedAt: DateTime.now(),
               );
             }
           }

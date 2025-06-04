@@ -8,7 +8,7 @@ import 'package:meepshoptest/features/auth/presentation/blocs/auth_state.dart'
     as auth_state;
 import 'package:meepshoptest/features/chat/presentation/blocs/create_conversation/create_conversation_bloc.dart'
     as create_conv_bloc;
-import 'package:meepshoptest/features/chat/presentation/blocs/conversation_list/conversation_list_bloc.dart';
+import 'package:meepshoptest/features/conversation/presentation/blocs/conversation_list_bloc.dart';
 import 'package:meepshoptest/injectable.dart'; // Added import for getIt
 import 'package:meepshoptest/core/router/router.dart'; // Added for ChatMessageRoute
 // import 'package:meepshoptest/features/chat/domain/usecases/create_conversation_usecase.dart'; // Will be provided via GetIt

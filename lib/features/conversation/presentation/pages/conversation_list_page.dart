@@ -7,11 +7,12 @@ import 'package:meepshoptest/core/utils/string_utils.dart';
 import 'package:meepshoptest/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:meepshoptest/features/auth/presentation/blocs/auth_event.dart';
 import 'package:meepshoptest/features/auth/presentation/blocs/auth_state.dart';
-import 'package:meepshoptest/features/conversation/domain/entities/conversation_entity.dart';
+// import 'package:meepshoptest/features/conversation/domain/entities/conversation_entity.dart'; // Ensure this is REMOVED or commented out
+import 'package:meepshoptest/features/chat/domain/entities/conversation_entity.dart'; // Ensure this is ADDED
+import 'package:meepshoptest/features/chat/domain/entities/participant_entity.dart'; // Ensure this is ADDED
 import 'package:meepshoptest/features/conversation/presentation/blocs/conversation_list_bloc.dart';
-import 'package:meepshoptest/features/conversation/presentation/blocs/conversation_list_event.dart';
-import 'package:meepshoptest/features/conversation/presentation/blocs/conversation_list_state.dart';
 import 'package:meepshoptest/injectable.dart'; // For getIt
+import 'package:meepshoptest/core/router/router.dart'; // Ensure this is ADDED
 
 @RoutePage()
 class ConversationListPage extends StatelessWidget {
@@ -39,11 +40,13 @@ class ConversationListPage extends StatelessWidget {
         body: BlocBuilder<ConversationListBloc, ConversationListState>(
           builder: (context, state) {
             return switch (state) {
-              ConversationListInitial() || ConversationListLoading() =>
-                const Center(child: CircularProgressIndicator()),
-              ConversationListLoaded(:final conversations) =>
-                _buildConversationList(context, conversations),
-              ConversationListError(:final failure) => Center(
+              Initial() ||
+              Loading() => const Center(child: CircularProgressIndicator()),
+              Loaded(:final conversations) => _buildConversationList(
+                context,
+                conversations,
+              ),
+              Error(:final failure) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -83,29 +86,25 @@ class ConversationListPage extends StatelessWidget {
       itemCount: conversations.length,
       itemBuilder: (context, index) {
         final conversation = conversations[index];
-        final title =
-            conversation.title ??
-            conversation.participants.map((p) => p.username).join(', ');
 
-        // Safely get current user ID to filter out from participants for display
         String? currentUserId;
         final authState = context.read<AuthBloc>().state;
         if (authState is AuthAuthenticated) {
           currentUserId = authState.user.id;
         }
 
-        String displayTitle =
-            conversation.title ??
-            StringUtils.generateConversationTitle(
-              conversation.participants,
-              currentUserId,
-            );
+        String displayTitle = conversation.name;
+        if (displayTitle.isEmpty || displayTitle == "Unknown Conversation") {
+          displayTitle = conversation.participants
+              .map((p) => p.user ?? 'Unknown')
+              .join(', ');
+          if (displayTitle.isEmpty) displayTitle = "Conversation";
+        }
 
         return ListTile(
           leading: CircleAvatar(
-            // Placeholder for avatar
             child: Text(
-              displayTitle.isNotEmpty ? displayTitle[0].toUpperCase() : 'U',
+              displayTitle.isNotEmpty ? displayTitle[0].toUpperCase() : 'C',
             ),
           ),
           title: Text(
@@ -113,23 +112,28 @@ class ConversationListPage extends StatelessWidget {
             style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
-            conversation.lastMessageText ?? 'No messages yet',
+            conversation.lastMessage ?? 'No messages yet',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 14.sp),
           ),
           trailing:
-              conversation.lastMessageTimestamp != null
+              conversation.timestamp != null
                   ? Text(
-                    StringUtils.formatRelativeTime(
-                      conversation.lastMessageTimestamp!,
-                    ),
+                    StringUtils.formatRelativeTime(conversation.timestamp!),
                     style: TextStyle(fontSize: 12.sp, color: Colors.grey),
                   )
                   : null,
           onTap: () {
-            // TODO: Navigate to chat page
-            // context.pushRoute(ChatRoute(conversationId: conversation.id));
+            if (currentUserId != null) {
+              context.router.push(
+                ChatMessageRoute(
+                  conversation: conversation,
+                  conversationTitle: displayTitle,
+                  currentUserId: currentUserId,
+                ),
+              );
+            }
             print('Tapped on conversation: ${conversation.id}');
           },
         );
